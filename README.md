@@ -1,2 +1,7 @@
 # MeetupToRTM
-Export your upcoming MeetUp events into Remember The Milk application
+Export your upcoming Meetup.com events into Remember The Milk tasks.
+
+
+![image](rtm_meetup.PNG)
+
+
