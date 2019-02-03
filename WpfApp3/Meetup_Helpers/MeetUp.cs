@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
+using System.Text.RegularExpressions;
+using System.Globalization;
+
+using MeetupToRTM.Meetup_Helpers;
+
+using NodaTime.Text;
+using NLog;
 using RestSharp;
 using Flurl;
 using Newtonsoft.Json;
-using System.Windows;
-using System.ComponentModel;
-using System.Text.RegularExpressions;
-using NodaTime.Text;
-using System.Globalization;
 
 namespace MeetupToRTM.MeetupHelpers
 {
-    public class MeetUp // : INotifyPropertyChanged
+    public class MeetUp
     {
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         // Meetup final variables
         // source object
         public static readonly string format = "json";
@@ -26,32 +31,31 @@ namespace MeetupToRTM.MeetupHelpers
         public readonly AuthKeys ak = null;
 
         List<MeetupJSONEventResults> list_meetup_event_res = null;
-        List<string> list_meetup_vanue_res = null;
+        List<string> list_meetup_venue_res = null;
         List<string> rtm_string_add_tasks = null;
         List<string> rtm_string_get_our_tasks = null;
 
-        public string event_meetup = string.Empty;
-        public string event_meetup_venue = string.Empty;
-
+        private string event_meetup = string.Empty;
+        private string event_meetup_venue = string.Empty;
 
         public MeetUp()
         {
 
         }
 
-        public MeetUp(AuthKeys ak)
+        public MeetUp(AuthKeys aka)
         {
-            this.ak = ak;
+            ak = aka;
             rtm_string_add_tasks = new List<string>();
             rtm_string_get_our_tasks = new List<string>();
-            list_meetup_vanue_res = new List<string>();
-
+            list_meetup_venue_res = new List<string>();
         }
 
         /// <summary>
-        /// Creates Flurl-based URL which can access Meetups data
+        /// Creates Flurl-based URL which can access MeetUp data
         /// </summary>
-        /// <returns></returns>
+        /// <param name="meetup_api_key">MeetUp Key provided by the user in GUI</param>
+        /// <returns>URL which returns JSON output</returns>
         public string CreateURL(string meetup_api_key)
         {
             var my_url = host
@@ -71,31 +75,41 @@ namespace MeetupToRTM.MeetupHelpers
         /// <summary>
         /// Extract meetup JSON data and store them in the list of events
         /// </summary>
-        /// <returns></returns>
+        /// <param name="URL">URL which is returned </param>
+        /// <returns>Data (list of events) being associated with <c>MeetupJSONEventResults</c> class</returns>
         public List<MeetupJSONEventResults> GetMeetupData(string URL)
         {           
-
             var client = new RestClient
             {
                 BaseUrl = new Uri(URL)
             };
             var request = new RestRequest();
+
             IRestResponse response = client.Execute(request);
+            if (response.ErrorException != null)
+            {
+                const string message = "Error retrieving response. Check inner details for more info.";
+                var RTMException = new ApplicationException(message, response.ErrorException);
+                throw RTMException;
+            }
             var content = response.Content;
 
             try
             {
                 list_meetup_event_res = JsonConvert.DeserializeObject<List<MeetupJSONEventResults>>(content);
             }
-            catch (JsonException)
+            catch (JsonException ex)
             {
-                //_textboxLog += list_meetup_event_res.ToString() + Environment.NewLine;
-                //OnPropertyChanged("TextBoxValue");
+                logger.Error(ex, "Could not deserialize JSON Object");
             }
 
             return list_meetup_event_res;
         }
 
+        /// <summary>
+        /// If there are zero events, say it
+        /// </summary>
+        /// <param name="list_meetup_event_res">List of <c>MeetupJSONEventResults</c> events</param>
         public void ValidateMeetupData(List<MeetupJSONEventResults> list_meetup_event_res)
         {
             if (list_meetup_event_res.Count == 0)
@@ -106,7 +120,11 @@ namespace MeetupToRTM.MeetupHelpers
             }
         }
 
-        public void returnSampleData(List<MeetupJSONEventResults> list_meetup_event_res)
+        /// <summary>
+        /// Returns a sample of data, i.e. URL links
+        /// </summary>
+        /// <param name="list_meetup_event_res">URL event links</param>
+        public void ReturnSampleData(List<MeetupJSONEventResults> list_meetup_event_res)
         {
             foreach (var item in list_meetup_event_res)
             {
@@ -115,10 +133,11 @@ namespace MeetupToRTM.MeetupHelpers
         }
 
         /// <summary>
-        /// 
+        /// Create a list of strings which are later passed to RTM for parsing and establishing RTM tasks
         /// </summary>
-        /// <param name="list_meetup_res"></param>
-        /// <returns></returns>
+        /// <param name="list_meetup_res">List of events, from <c>GetMeetupData</c> method</param>
+        /// <seealso cref="GetMeetupData(string URL)"/>
+        /// <returns>A list of strings which are pushed to become RTM tasks</returns>
         public List<string> PrepareMeetupTaskList_ToString(List<MeetupJSONEventResults> list_meetup_res)
         {
             foreach (var item in list_meetup_res)
@@ -160,11 +179,10 @@ namespace MeetupToRTM.MeetupHelpers
         }
 
         /// <summary>
-        ///
-        /// TODO: work on exceptions
+        /// Prepares a list of events       
         /// </summary>
         /// <param name="list_meetup_res"></param>
-        /// <returns></returns>
+        /// <returns>Return a list of venues for events</returns>
         public List<string> PrepareMeetupTaskList_Venue_ToString(List<MeetupJSONEventResults> list_meetup_res)
         {
 
@@ -179,32 +197,30 @@ namespace MeetupToRTM.MeetupHelpers
                 }
                 catch (NullReferenceException e)
                 {
-                    // TODO: better exception handling
+                    logger.Error(e, "Null Reference Exception");
                 }
 
-                bool inoe = String.IsNullOrEmpty(event_meetup_venue);
+                bool inoe = string.IsNullOrEmpty(event_meetup_venue);
 
-                if (inoe == false)
-                {
-                    //Console.WriteLine(event_meetup_venue);
-                }
-                else
-                {
+                if (inoe == true)
+                { 
                     string ev_loc = " Nah,......Event location is empty at present";
+                    logger.Error("Venue for a specific event is empty");
                     //Console.WriteLine(event_meetup_venue + ev_loc);
                     MainWindow.Handle_Other(ev_loc);
                 }
-                list_meetup_vanue_res.Add(event_meetup_venue);
+
+                list_meetup_venue_res.Add(event_meetup_venue);
             }
-            return list_meetup_vanue_res;
+            return list_meetup_venue_res;
         }
 
 
         /// <summary>
         /// Delete # and @ from event name, plus numbers from name
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">string which contains name of the event</param>
+        /// <returns>a cleaned event name</returns>
         public static string DeleteChars(string name)
         {
             string new_name = Regex.Replace(name, "[—?@–#&!$%-=]", "", RegexOptions.Compiled);
@@ -213,55 +229,21 @@ namespace MeetupToRTM.MeetupHelpers
         }
 
         /// <summary>
-        /// Convert from  yyyy-mm-dd to dd-mm-yyyy
+        /// Convert from yyyy-mm-dd to dd-mm-yyyy
         /// </summary>
-        /// <param name="local_date"></param>
-        /// <returns></returns>
+        /// <param name="local_date">ISO date</param>
+        /// <returns>EU date format</returns>
         public static string ConvertToEUDate(string local_date)
         {
 
             var pattern = LocalDateTimePattern.CreateWithInvariantCulture("yyyy-MM-dd");
             var date = pattern.Parse(local_date).Value.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-            //Console.WriteLine("converted datetime" + dateTime);
-            //Console.WriteLine("converted original" + pattern.Format(pattern.Parse(text).Value));
+            //Console.WriteLine("converted datetime" + local_date);
 
             return date;
         }
     }
 
-    /// <summary>
-    /// Create class that we can map our JSON to.
-    /// </summary>
-    public class MeetupJSONEventResults : MeetUp
-    {
-        public string How_to_find_us { get; set; }
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public int Rsvp_limit { get; set; }
-        public string Status { get; set; }
-        // The local date of the Meetup in ISO 8601 format
-        public string Local_date { get; set; }
-        // The local time of the Meetup in ISO 8601 format
-        public string Local_time { get; set; }
-        public long Updated { get; set; }
-        public int UTC_offset { get; set; }
-        public int Waitlist_count { get; set; }
-        public int Yes_rsvp_count { get; set; }
-        public MeetupJSONVenueResults Venue { get; set; }
-        public string Link { get; set; }
-        public string Description { get; set; }
-        public string Visibility { get; set; }
-        public bool saved { get; set; }
-        public bool Pro_is_email_shared { get; set; }
-    }
 
-    public class MeetupJSONVenueResults : MeetUp
-    {
-        public string Name { get; set; }
-        public float Lat { get; set; }
-        public float Lon { get; set; }
-        public string Address_1 { get; set; }
-        public string City { get; set; }
-    }
 
 }

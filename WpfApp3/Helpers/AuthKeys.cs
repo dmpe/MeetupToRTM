@@ -1,44 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MeetupToRTM
+﻿namespace MeetupToRTM
 {
     public class AuthKeys
     {
-        // RTM final variables
-        // source objects with "one way to source"
-        private string myRTMkey;
-        private string myRTMsecret;
-        private string myMeetupKey;
 
+        /// <summary>
+        /// Empty constructor
+        /// </summary>
         public AuthKeys()
         {
+
         }
 
+        /// <summary>
+        /// Fetch user provided API Keys
+        /// </summary>
+        /// <param name="myRTMkey"></param>
+        /// <param name="myRTMsecret"></param>
+        /// <param name="myMeetupKey"></param>
         public AuthKeys(string myRTMkey, string myRTMsecret, string myMeetupKey)
         {
-            this.myRTMkey = myRTMkey;
-            this.myRTMsecret = myRTMsecret;
-            this.myMeetupKey = myMeetupKey;
+            MyRTMkey = myRTMkey;
+            MyRTMsecret = myRTMsecret;
+            MyMeetupKey = myMeetupKey;
         }
 
-        public string MyRTMkey
-        {
-            get => myRTMkey;
-            set => myRTMkey = value;
-        }
-        public string MyRTMsecret
-        {
-            get => myRTMsecret;
-            set => myRTMsecret = value;
-        }
-        public string MyMeetupKey
-        {
-            get => myMeetupKey;
-            set => myMeetupKey = value;
-        }
+        /// <summary>
+        /// Get and Set Method
+        /// </summary>
+        public string MyRTMkey { get; set; }
+
+        /// <summary>
+        /// Get and Set Method
+        /// </summary>
+        public string MyRTMsecret { get; set; }
+
+        /// <summary>
+        /// Get and Set Method
+        /// </summary>
+        public string MyMeetupKey { get; set; }
     }
 }
