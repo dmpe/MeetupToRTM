@@ -1,6 +1,6 @@
 ﻿using MeetupToRTM.MeetupHelpers;
 
-namespace MeetupToRTM.Meetup_Helpers
+namespace MeetupToRTM.MeetupJSONHelpers
 {
     /// <summary>
     /// Create a main MeetUp JSON class that we can map our JSON to.

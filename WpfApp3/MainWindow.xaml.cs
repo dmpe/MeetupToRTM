@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using MeetupToRTM.MeetupHelpers;
+﻿using MeetupToRTM.MeetupHelpers;
+using MeetupToRTM.MeetupJSONHelpers;
 using MeetupToRTM.RememberTM_Helpers;
+
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Text;
-using MeetupToRTM.Meetup_Helpers;
+using System.Windows.Navigation;
+
+using System.Diagnostics;
+using NLog;
 
 namespace MeetupToRTM
 {
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// <see href="https://www.wpf-tutorial.com/data-binding/responding-to-changes/"></see>
@@ -19,6 +22,8 @@ namespace MeetupToRTM
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         RTM rtm = null;
         AuthKeys ak = null;
         MeetUp meetup_inst = null;
@@ -57,21 +62,21 @@ namespace MeetupToRTM
         public void Click_Button(object sender, RoutedEventArgs e)
         {
             // initiate connection
-            Handle_Other("RTM: Innitiate Connection...now...");
+            SetLoggingMessage_Other("RTM: Innitiate Connection...now...");
             rtm.InitiateConnection(ak);
 
-            var meetup_url = meetup_inst.CreateURL(ak.MyMeetupKey);
+            var meetup_url = meetup_inst.SetMeetupURL(ak.MyMeetupKey);
             //Console.WriteLine("we are at meetup link: " + meetup_url);
-            Handle_Other("RTM: we are at meetup link: " + meetup_url);
+            SetLoggingMessage_Other("RTM: we are at meetup link: " + meetup_url);
 
             List<MeetupJSONEventResults> mu_data = meetup_inst.GetMeetupData(meetup_url);
 
-            meetup_inst.ReturnSampleData(mu_data); // for testing
+            //meetup_inst.GetSampleData(mu_data); // for testing
 
-            var mu_event = meetup_inst.PrepareMeetupTaskList_ToString(mu_data);
+            var mu_event = meetup_inst.SetMeetupTasks_FinalRTMStringList(mu_data);
             var mu_event_vanue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(mu_data);
 
-            rtm.CreateRTMTasks(mu_data, mu_event, mu_event_vanue, checkbox_value);
+            rtm.SetRTMTasks(mu_data, mu_event, mu_event_vanue, checkbox_value);
 
 
         }
@@ -121,7 +126,7 @@ namespace MeetupToRTM
         /// 
         /// </summary>
         /// <param name="str"></param>
-        public static void Handle_Other(string str)
+        public static void SetLoggingMessage_Other(string str)
         {
             ListBoxData.Add(str);
         }
@@ -140,10 +145,21 @@ namespace MeetupToRTM
                 Clipboard.SetText(s);
 
                 //Console.WriteLine(s);
-                Handle_Other("Copied to the clipboard");
+                string info = "Copied to the clipboard";
+                SetLoggingMessage_Other(info);
+                logger.Info(info);
             }
         }
-
+        /// <summary>
+        /// Hyperlinks need to be opened using this function -- the user starts a browser
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenInBrowser(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
     }
 
 }

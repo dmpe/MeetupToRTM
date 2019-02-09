@@ -78,7 +78,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>iconfinder_milking-maid_1518579.ico</ApplicationIcon>
+    <ApplicationIcon>images\iconfinder_milking-maid_1518579.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -221,7 +221,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="iconfinder_milking-maid_1518579.ico" />
+    <Resource Include="images\iconfinder_milking-maid_1518579.ico" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
