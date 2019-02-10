@@ -115,7 +115,7 @@ namespace MeetupToRTM.MeetupHelpers
         {
             if (list_meetup_event_res.Count == 0)
             {
-                string log = "Does not contain any upcomming meetups";
+                string log = "Meetup: Does not contain any upcomming meetups";
                 Console.WriteLine(log);
                 logger.Error(log);
                 MainWindow.SetLoggingMessage_Other(log);
@@ -197,7 +197,7 @@ namespace MeetupToRTM.MeetupHelpers
                 }
                 catch (NullReferenceException e)
                 {
-                    string ev_loc = " Nah,......Event/Venue location is empty at present";
+                    string ev_loc = "Meetup: Nah,......Event/Venue location is empty at present";
                     logger.Error(e, ev_loc, event_meetup_venue);
                     MainWindow.SetLoggingMessage_Other(ev_loc);
                     event_meetup_venue = "Empty venue";
@@ -230,7 +230,7 @@ namespace MeetupToRTM.MeetupHelpers
         {
             var pattern = LocalDateTimePattern.CreateWithInvariantCulture("yyyy-MM-dd");
             var date = pattern.Parse(local_date).Value.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-            logger.Info("converted datetime" + local_date);
+            logger.Info("converted datetime: " + local_date);
 
             return date;
         }
