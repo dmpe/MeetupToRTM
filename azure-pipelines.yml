@@ -50,12 +50,18 @@ steps:
   displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: '**\bin\$(BuildConfiguration)\**'
+    Contents: '**\bin\$(BuildConfiguration)\*.dll'
     TargetFolder: '$(build.artifactstagingdirectory)'
     CleanTargetFolder: true
     OverWrite: true
   condition: succeededOrFailed()
 
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+  condition: succeededOrFailed()
+  
 - script: |
     dir $(Build.ArtifactStagingDirectory)
     dir $(Build.SourcesDirectory)
@@ -65,9 +71,6 @@ steps:
   inputs: 
     command: restore
     solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
-
-- script: |
-    dir $(Build.SourcesDirectory)\WpfApp3\packages /s
 
 - task: VSBuild@1
   inputs:
@@ -82,3 +85,12 @@ steps:
 
 - task: SonarSource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@4
   displayName: 'Run Code Analysis'
+
+- task: GitHubRelease@0
+  displayName: 'GitHub release (create)'
+  inputs:
+    gitHubConnection: dmpe
+    repositoryName: dmpe/MeetupToRTM
+    title: '$(Parameters.title)'
+    isPreRelease: true
+  continueOnError: true
