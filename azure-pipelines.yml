@@ -59,7 +59,7 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.SourcesDirectory)'
   inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi'
+    SourceFolder: '$(system.defaultworkingdirectory)'
     Contents: '**\bin\$(BuildConfiguration)\*.dll'
     TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\packages\'
     CleanTargetFolder: true
@@ -69,9 +69,9 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Files to: bin/debug'
   inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi'
+    SourceFolder: '$(system.defaultworkingdirectory)'
     Contents: '**\bin\$(BuildConfiguration)\*.dll'
-    TargetFolder: '$(Build.SourcesDirectory)\bin\x86\Debug'
+    TargetFolder: '$(Build.SourcesDirectory)'
     CleanTargetFolder: true
     OverWrite: true
   condition: succeededOrFailed()
@@ -83,9 +83,14 @@ steps:
     ArtifactName: RememberTheMilkApi.dll
   condition: succeededOrFailed()
 
+- task: DownloadPipelineArtifact@1
+  displayName: 'Download Pipeline Artifact'
+  inputs:
+    downloadPath: '$(Build.SourcesDirectory)\WpfApp3\packages'
+
 - script: |
     dir $(Build.ArtifactStagingDirectory) /s
-    dir $(Build.SourcesDirectory)
+    dir $(Build.SourcesDirectory) /s
 
 - task: NugetRestore@2
   displayName: Restore nuget MeetupToRTM.csproj
