@@ -24,8 +24,8 @@ You will need to have 2 API keys:
  - API Key from Meetup <https://secure.meetup.com/meetup_api/key/>
  - API Keys from RTM <https://www.rememberthemilk.com/services/api/>
 
-![image](rtm_meetup.PNG)
-![image2](rtm_smartlist.PNG)
+![image](images/rtm_meetup.PNG)
+![image2](images/rtm_smartlist.PNG)
 
 # Building/Testing MeetupToRTM
 
@@ -40,7 +40,7 @@ git submodule update --remote
 
 **Class Diagramm anybody ? Sure here we go:**
 
-![image3](ClassDiagram_MeetupToRTM.png)
+![image3](images/ClassDiagram_MeetupToRTM.png)
 
 
 # Achievements
