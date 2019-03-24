@@ -66,16 +66,6 @@ steps:
     OverWrite: true
   condition: succeededOrFailed()
 
-- task: CopyFiles@2
-  displayName: 'Copy Files from artefact dir to SourcesDirectory\bin\x86\Debug'
-  inputs:
-    SourceFolder: '$(build.ArtifactStagingDirectory)\'
-    Contents: 'RememberTheMilkApi.dll'
-    TargetFolder: '$(Build.SourcesDirectory)\bin\x86\Debug'
-    CleanTargetFolder: true
-    OverWrite: true
-  condition: succeededOrFailed()
-
 - script: |
     dir $(Build.ArtifactStagingDirectory) /s
     dir $(Build.SourcesDirectory) /s
