@@ -59,8 +59,8 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.SourcesDirectory)'
   inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: '**\bin\$(BuildConfiguration)\RememberTheMilkApi.dll'
+    SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\Release\'
+    Contents: 'RememberTheMilkApi.dll'
     TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\'
     CleanTargetFolder: true
     OverWrite: true
