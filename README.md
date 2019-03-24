@@ -1,8 +1,8 @@
 [![Build Status](https://johnmalc.visualstudio.com/GitHubRepos/_apis/build/status/dmpe.MeetupToRTM?branchName=master)](https://johnmalc.visualstudio.com/GitHubRepos/_build/latest?definitionId=4&branchName=master)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=alert_status)](https://sonarcloud.io/dashboard?id=dmpe_MeetupToRTM) 
- [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=coverage)](https://sonarcloud.io/component_measures/metric/coverage/list?id=dmpe_MeetupToRTM)
- [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=dmpe_MeetupToRTM)
- [![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=dmpe_MeetupToRTM)
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=dmpe_MeetupToRTM)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=dmpe_MeetupToRTM)
+![GitHub](https://img.shields.io/github/license/dmpe/MeetupToRTM.svg?style=for-the-badge)
  
 # MeetupToRTM: C# .NetFramework 4.7 Desktop Application
 
@@ -25,12 +25,12 @@ You will need to have 2 API keys:
  - API Keys from RTM <https://www.rememberthemilk.com/services/api/>
 
 ![image](rtm_meetup.PNG)
-![image](rtm_smartlist.PNG)
+![image2](rtm_smartlist.PNG)
+![image3](ClassDiagram_MeetupToRTM.png)
 
 # Building/Testing MeetupToRTM
 
-An attempt was made to use Azure Pipelines for CI/CD. 
-See here <https://johnmalc.visualstudio.com/GitHubRepos/_build/>
+I use Azure Pipelines for CI/CD. See here <https://johnmalc.visualstudio.com/GitHubRepos/_build/>
 
 How to update submodule to point to the latest changes?
 
@@ -42,4 +42,3 @@ git submodule update --remote
 # Achievements
 
 In order to make this application work, I had to fork and submit patches to the <https://github.com/dmpe/RememberTheMilkApi>, including `merged_branch_with_all_changes` branch.
-
