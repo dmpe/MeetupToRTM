@@ -15,6 +15,8 @@
  
  - [ ] In case, the of frequent use, the app can recognize already added tasks (through above format) and will skip adding them again. Therefore de-cluttering your list and avoding adding duplicates. :yum:
 
+ - [ ] For testing, use secret keys <https://stackoverflow.com/questions/50299066/how-to-pass-secrets-into-the-test-execution-context-from-vsts>
+
 #### Requirenments to making it work:
 
 You will need to have 2 API keys:
@@ -29,6 +31,13 @@ You will need to have 2 API keys:
 
 An attempt was made to use Azure Pipelines for CI/CD. 
 See here <https://johnmalc.visualstudio.com/GitHubRepos/_build/>
+
+How to update submodule to point to the latest changes?
+
+```
+cd MeetupToRTM
+git submodule update --remote 
+```
 
 # Achievements
 

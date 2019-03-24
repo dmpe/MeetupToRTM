@@ -47,17 +47,7 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: CopyFiles@2
-  displayName: 'Copy Files to: $(build.ArtifactStagingDirectory)'
-  inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: '**\bin\$(BuildConfiguration)\*.dll'
-    TargetFolder: '$(build.ArtifactStagingDirectory)'
-    CleanTargetFolder: true
-    OverWrite: true
-  condition: succeededOrFailed()
-
-- task: CopyFiles@2
-  displayName: 'Copy Files to: $(Build.SourcesDirectory)'
+  displayName: 'Copy Files to RTM lib to $(Build.SourcesDirectory) where MeetupToRTM.csproj loads it'
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\Release\'
     Contents: 'RememberTheMilkApi.dll'
@@ -66,9 +56,9 @@ steps:
     OverWrite: true
   condition: succeededOrFailed()
 
-- script: |
-    dir $(Build.ArtifactStagingDirectory) /s
-    dir $(Build.SourcesDirectory) /s
+#- script: |
+#    dir $(Build.ArtifactStagingDirectory) /s
+#    dir $(Build.SourcesDirectory) /s
 
 - task: NugetRestore@2
   displayName: Restore nuget MeetupToRTM.csproj
@@ -82,10 +72,10 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+#- task: VSTest@2
+#  inputs:
+#    platform: '$(buildPlatform)'
+#    configuration: '$(buildConfiguration)'
 
 - task: SonarSource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@4
   displayName: 'Run Code Analysis'
