@@ -116,7 +116,7 @@
     </Reference>
     <Reference Include="RememberTheMilkApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\RememberTheMilkApi-master\RememberTheMilkApi\bin\Debug\RememberTheMilkApi.dll</HintPath>
+      <HintPath>..\packages\RememberTheMilkApi.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=106.6.7.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.6.7\lib\net452\RestSharp.dll</HintPath>

@@ -34,6 +34,14 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'RememberTheMilkApi.dll'
+    targetPath: $(Build.SourcesDirectory)\WpfApp3\packages'
+
+- script: |
+    dir $(Build.SourcesDirectory)\WpfApp3\packages /s
+
 - task: NugetRestore@2
   displayName: Restore nuget MeetupToRTM.csproj
   inputs: 
@@ -41,8 +49,7 @@ steps:
     solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
 
 - script: |
-    dir $(Build.SourcesDirectory)
-
+    dir $(Build.SourcesDirectory)\WpfApp3\packages /s
 
 - task: VSBuild@1
   inputs:
