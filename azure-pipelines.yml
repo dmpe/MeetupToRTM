@@ -24,13 +24,14 @@ steps:
 - task: SonarSource.sonarqube.15B84CA1-B62F-4A2A-A403-89B77A063157.SonarQubePrepare@4
   displayName: 'Prepare analysis on SonarQube'
   inputs:
-    SonarQube: 'SonarCloud'
-    projectKey: dmpe_MeetupToRTM
+    SonarQube: 'SonarQube Cloud io'
+    projectKey: 'dmpe_MeetupToRTM'
     projectName: MeetupToRTM
-    projectVersion: '$(AssemblyVersion)'
     extraProperties: |
      sonar.organization=dmpe-github
      sonar.branch.name=master
+  continueOnError: true
+  condition: succeededOrFailed()
 
 - task: NugetRestore@1
   displayName: Restore nuget packages for RememberTheMilkApi.sln
@@ -45,10 +46,15 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: PublishPipelineArtifact@0
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
   inputs:
-    artifactName: 'RememberTheMilkApi.dll'
-    targetPath: $(Build.SourcesDirectory)
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '**\bin\$(BuildConfiguration)\**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+    CleanTargetFolder: true
+    OverWrite: true
+  condition: succeededOrFailed()
 
 - script: |
     dir $(Build.ArtifactStagingDirectory)
@@ -73,6 +79,6 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    
+
 - task: SonarSource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@4
   displayName: 'Run Code Analysis'
