@@ -29,9 +29,7 @@ namespace MeetupToRTM.RememberTM_Helpers
         private string list_id = string.Empty;
         private string target_rtm_meetup_list = string.Empty;
 
-        RtmApiResponse created_task = null;
-        ObservableCollection<string> ListBoxData { get; set; }
-        Random r = new Random();
+        readonly Random r = new Random();
 
         /// <summary>
         /// Empty constructor
@@ -89,14 +87,15 @@ namespace MeetupToRTM.RememberTM_Helpers
                     try
                     {
                         RtmConnectionHelper.CheckApiAuthToken();
-                    } catch(Exception e)
+                    }
+                    catch (Exception e)
                     {
                         string mes = "checking for the RTM token has failed. Creating new one";
                         MainWindow.SetLoggingMessage_Other(mes);
                         logger.Error(mes);
                         MainWindow.SetLoggingMessage_Other(e.Message);
                     }
-                    
+
                     CreateAuthFile("authtoken.authtoken", authResponse.Auth.Token);
 
                 }
@@ -132,17 +131,16 @@ namespace MeetupToRTM.RememberTM_Helpers
 
         /// <summary>
         /// <see href="https://www.rememberthemilk.com/services/api/methods/rtm.tasks.add.rtm"></see>
-        /// Main method where creating of tasks is started, and then called further down the chain.
+        /// Main method where tasks are created (i.e. the process is started), and then called further down the chain.
         /// <param name="mu_data"></param>
         /// <param name="mu_data_strings"></param>
         /// <param name="mu_venue_strings"></param>
         /// <param name="checkbox"></param>
         /// </summary>
-        public void SetRTMTasks(List<MeetupJSONEventResults> mu_data, List<string> mu_data_strings, List<string> mu_venue_strings, bool checkbox)
+        public void SetRTMTasks(List<MeetupJSONEventResults> mu_data, List<string> mu_data_strings,
+                                List<string> mu_venue_strings, bool checkbox)
         {
-            GetRTMTimeline();
-
-            string msg = "RTM: we are creating a new set of task";
+            string msg = "RTM: we are creating a new set of tasks";
             MainWindow.SetLoggingMessage_Other(msg);
             logger.Info(msg);
 
@@ -154,55 +152,60 @@ namespace MeetupToRTM.RememberTM_Helpers
 
             logger.Info("RTM: Number of upcomming entries: " + upcomming_events);
             MainWindow.SetLoggingMessage_Other("\n RTM: Number of upcomming entries: " + upcomming_events);
-            
-            if(checkbox == true) {
+
+            if (checkbox)
+            {
                 // add all even if they already exist
                 AddTasks(true);
-            } else {
+            }
+            else
+            {
                 // only add those which do not exist
                 AddTasks(false);
             }
-        }
-
-        private string GetRTMTimeline()
-        {
-            timeline = RtmConnectionHelper.CreateTimeline().TimeLine;
-            return timeline;
         }
 
         /// <summary>
         /// Here we need to incorporate logic for the checkbox and
         /// checking if task already exist, then skip
         /// </summary>
+        /// <see href="https://stackoverflow.com/questions/9524681/find-if-lista-contains-any-elements-not-in-listb"/>
         /// <param name="addAllTasks"></param>
         private void AddTasks(bool addAllTasks)
         {
-            try
+            if (addAllTasks == true)
             {
-                foreach (var task_str in mu_event)
+                try
                 {
-                    logger.Info("...............");
-                    logger.Info(task_str);
-                    logger.Info("...............");
+                    foreach (var task_str in mu_event)
+                    {
+                        logTasks(task_str);
+                        RtmApiResponse created_task = RtmMethodHelper.AddTask(timeline, task_str, parse: "1");
 
-                    MainWindow.SetLoggingMessage_Other(task_str);
-                    // get all tasks where name begins with ID-MeetupRTM: 257831299 using GetMeetupTasks_FinalRTMStringList method .... and 
+                        list_id = created_task.List.Id;
 
-                    created_task = RtmMethodHelper.AddTask(timeline, task_str, parse: "1");
+                        string strr = "timeline_id: " + timeline + "\n" + "list_id: " + list_id + "\n";
+                        logger.Info(strr);
+                        MainWindow.SetLoggingMessage_Other(strr);
+                    }
+                    GetStoredRTMTasks(list_id, timeline);
 
-                    list_id = created_task.List.Id;
-
-                    string strr = "timeline_id: " + timeline + "\n" + "list_id: " + list_id + "\n";
-                    logger.Info(strr);
-                    MainWindow.SetLoggingMessage_Other(strr);
                 }
-                GetStoredRTMTasks(list_id, timeline);
+                catch (Exception e)
+                {
+                    Console.Write("RTM: some error in AddTasks " + e.Message);
+                    logger.Error(e.Message);
+                }
 
-            }
-            catch (Exception e)
+            } else
             {
-                Console.Write("RTM: some error in AddTasks " + e.Message);
-                logger.Error(e.Message);
+                // get all tasks where name begins with ID-MeetupRTM: 257831299 
+                // using GetMeetupTasks_FinalRTMStringList method .... and 
+
+                // compare two lists
+                // if event id exists in the list, then do not add
+                // if does not then 
+                // created_task = RtmMethodHelper.AddTask(timeline, task_str, parse: "1");
             }
         }
 
@@ -211,7 +214,7 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// </summary>
         /// <param name="list_id"></param>
         /// <param name="timeline"></param>
-        public void GetStoredRTMTasks(string list_id, string timeline) 
+        public void GetStoredRTMTasks(string list_id, string timeline)
         {
             //result.list.taskseries.task.id
             //string taskseries_id = lj.
@@ -222,7 +225,7 @@ namespace MeetupToRTM.RememberTM_Helpers
 
             RtmApiResponse listResponse = RtmMethodHelper.GetListsList();
             RtmApiResponse taskResponse = RtmMethodHelper.GetTasksList();
-            
+
 
             //RtmApiTaskSeriesList tsaks = taskResponse.TaskSeriesCollection.TaskSeriesList
             //.Where(task => Equals(task.Id, "648052754")).FirstOrDefault();
@@ -231,7 +234,7 @@ namespace MeetupToRTM.RememberTM_Helpers
             //RtmApiListObject tssListIds = listResponse.ListCollection.Lists
             //    .Where(list => Equals(list.Id, list_id))
             //    .FirstOrDefault();
-            
+
 
             //return all lists - 7 currently
             int tssListIds2 = listResponse.ListCollection.Lists.Count();
@@ -245,50 +248,52 @@ namespace MeetupToRTM.RememberTM_Helpers
                 if (list_name.Name == "ID-MeetupRTM")
                 {
                     target_rtm_meetup_list = list_name.Id;
-                    logger.Info("target_rtm_meetup_list: -->" + target_rtm_meetup_list);
                 }
             }
-            RtmApiTaskSeriesList ssslist_id = taskResponse.TaskSeriesCollection.TaskSeriesList.FirstOrDefault();
 
-            RtmApiResponse taskResponse2 = RtmMethodHelper.GetTasksList(target_rtm_meetup_list);
-            var coun = taskResponse2.TaskSeriesCollection.TaskSeriesList.SelectMany(t => t.TaskSeries).ToList();
-            logger.Info("count of tasks in the list: -->" + coun.Count());
+            logger.Info("target_rtm_meetup_list: -->" + target_rtm_meetup_list);
+
+            RtmApiResponse list_res = RtmMethodHelper.GetTasksList(target_rtm_meetup_list);
+            var coun = list_res.TaskSeriesCollection.TaskSeriesList.Select(x => x.TaskSeries.Count()).Sum();
+            //list_res.TaskSeriesCollection.TaskSeriesList.Select(x => x.TaskSeries).ToList().ForEach(s => Console.WriteLine(s.));
+
+            var count = list_res.TaskSeriesCollection.TaskSeriesList.SelectMany(a => a.TaskSeries);
+            logger.Info("count of tasks in the list: -->" + coun + ".......... " + "--------------"+ /*coun3 +*/"___________" + count);
 
 
             //IList<RtmApiTaskSeries> tssTasks = taskResponse.TaskSeriesCollection.TaskSeriesList
             //.Where(taskSeriesList => taskSeriesList.TaskSeries.Any() && tssListIds2.Contains(taskSeriesList.Id))
             //.SelectMany(taskSeriesList => taskSeriesList.TaskSeries)
             //.ToList();
+            RtmApiTaskSeriesList ssslist_id = taskResponse.TaskSeriesCollection.TaskSeriesList.FirstOrDefault();
 
             // are same
             //logger.Info(tssListIds.Id);
-            logger.Info(ssslist_id.Id);
-            logger.Info("list id and task/taskseries id: ");
+            logger.Info("list id and task/taskseries id: " + ssslist_id.Id);
             // TODO: List all tasks id, then check for their names and if we really need them again
 
         }
-        # region in_development
-        //public bool IfTaskAlreadyExists(List<MeetupJSONEventResults> mu_data)
-        //{
-        //    var mu_our_names = meetup_inst.GetMeetupTasks_FinalRTMStringList(mu_data);
 
-        //    RtmApiResponse listResponse = RtmMethodHelper.GetListsList();
-        //    IList<string> tssListIds = listResponse.ListCollection.Lists.Where(list => 
-        //    string.Equals(list.Name, task, StringComparison.OrdinalIgnoreCase)).Select(list => 
-        //    list.Id).ToList();
+        /// <summary>
+        /// Returns a newly created RTM timeline
+        /// </summary>
+        /// <returns>a new timeline</returns>
+        private string GetRTMTimeline()
+        {
+            timeline = RtmConnectionHelper.CreateTimeline().TimeLine;
+            return timeline;
+        }
 
-        //    foreach (var task in mu_our_names) { 
-        //        if (TaskSeries contains task.name)
-        //        {
-        //            return false;
-        //        }
-        //        else
-        //        // this is new task
-        //        {
-        //            return true;
-        //        }
-        //    }
-        //}
-        #endregion
+        /// <summary>
+        /// Log information about tasks
+        /// </summary>
+        /// <param name="task_str"></param>
+        private void logTasks(string task_str)
+        {
+            logger.Info("...............");
+            logger.Info(task_str);
+            logger.Info("...............");
+            MainWindow.SetLoggingMessage_Other(task_str);
+        }
     }
 }

@@ -35,8 +35,8 @@ namespace MeetupToRTM.MeetupHelpers
         List<string> rtm_string_tasks_long = null;
         List<string> rtm_string_tasks_short = null;
 
-        private string event_meetup = string.Empty;
-        private string event_meetup_venue = string.Empty;
+        public string event_meetup = string.Empty;
+        public string event_meetup_venue = string.Empty;
 
         public MeetUp()
         {
@@ -185,7 +185,6 @@ namespace MeetupToRTM.MeetupHelpers
         /// <returns>Return a list of venues for events</returns>
         public List<string> PrepareMeetupTaskList_Venue_ToString(List<MeetupJSONEventResults> list_meetup_res)
         {
-
             foreach (var item in list_meetup_res)
             {
                 try
