@@ -60,8 +60,9 @@ steps:
   displayName: 'Publish Artifact: drop'
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
+    ArtifactName: RememberTheMilkApi.dll
   condition: succeededOrFailed()
-  
+
 - script: |
     dir $(Build.ArtifactStagingDirectory)
     dir $(Build.SourcesDirectory)
@@ -89,7 +90,7 @@ steps:
 - task: GitHubRelease@0
   displayName: 'GitHub release (create)'
   inputs:
-    gitHubConnection: dmpe
+    gitHubConnection: '$(Parameters.gitHubConnection)'
     repositoryName: dmpe/MeetupToRTM
     title: '$(Parameters.title)'
     isPreRelease: true
