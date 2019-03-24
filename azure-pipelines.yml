@@ -61,7 +61,7 @@ steps:
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
     Contents: '**\bin\$(BuildConfiguration)\RememberTheMilkApi.dll'
-    TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\packages\'
+    TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\'
     CleanTargetFolder: true
     OverWrite: true
   condition: succeededOrFailed()
