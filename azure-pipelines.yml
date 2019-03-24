@@ -56,6 +56,16 @@ steps:
     OverWrite: true
   condition: succeededOrFailed()
 
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.SourcesDirectory)'
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '**\bin\$(BuildConfiguration)\*.dll'
+    TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\packages'
+    CleanTargetFolder: true
+    OverWrite: true
+  condition: succeededOrFailed()
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   inputs:
@@ -64,7 +74,7 @@ steps:
   condition: succeededOrFailed()
 
 - script: |
-    dir $(Build.ArtifactStagingDirectory)
+    dir $(Build.ArtifactStagingDirectory) /s
     dir $(Build.SourcesDirectory)
 
 - task: NugetRestore@2
