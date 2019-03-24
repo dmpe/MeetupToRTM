@@ -12,7 +12,7 @@ pool:
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Debug'
 
 steps:
 - task: NuGetToolInstaller@0
@@ -20,6 +20,18 @@ steps:
 - checkout: self
   submodules: true
   displayName: Download submodules
+
+- task: NugetRestore@1
+  displayName: Restore nuget RememberTheMilkApi.sln
+  inputs: 
+    command: restore
+    solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
+
+- task: VSBuild@1
+  inputs:
+    solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
 - task: NugetRestore@2
   displayName: Restore nuget MeetupToRTM.csproj
