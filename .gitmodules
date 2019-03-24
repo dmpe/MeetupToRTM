@@ -1,4 +1,4 @@
 [submodule "RememberTheMilkApi"]
 	path = RememberTheMilkApi
-	url = ../RememberTheMilkApi.git
+	url = https://github.com/dmpe/RememberTheMilkApi.git
 	branch = merged_branch_with_all_changes
