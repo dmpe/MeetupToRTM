@@ -22,12 +22,13 @@ steps:
   displayName: Download submodules
 
 - task: NugetRestore@1
-  displayName: Restore nuget RememberTheMilkApi.sln
+  displayName: Restore nuget packages for RememberTheMilkApi.sln
   inputs: 
     command: restore
     solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
 
 - task: VSBuild@1
+  displayName: Building RememberTheMilkApi solution
   inputs:
     solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
     platform: '$(buildPlatform)'
@@ -39,10 +40,15 @@ steps:
     command: restore
     solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
 
+- script: |
+    dir $(Build.SourcesDirectory)
+
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
+    restoreNugetPackages: true
     configuration: '$(buildConfiguration)'
 
 - task: VSTest@2
