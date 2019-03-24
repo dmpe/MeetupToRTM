@@ -25,7 +25,7 @@ steps:
   displayName: Restore nuget MeetupToRTM.csproj
   inputs: 
     command: restore
-  solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
+    solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
 
 - task: VSBuild@1
   inputs:
