@@ -5,7 +5,6 @@ using RememberTheMilkApi.Helpers;
 using RememberTheMilkApi.Objects;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,32 +21,34 @@ namespace MeetupToRTM.RememberTM_Helpers
 
         private List<MeetupJSONEventResults> mu_data = null;
         private List<string> mu_venue = null;
-        private List<string> mu_event = null;
+        private List<RTM_Meetup_Tasks> mu_event = null;
 
         private readonly string random_n;
+        private readonly Random random_number = new Random();
+
         private string timeline = string.Empty;
         private string list_id = string.Empty;
         private string target_rtm_meetup_list = string.Empty;
 
-        readonly Random r = new Random();
 
         /// <summary>
-        /// Empty constructor
+        /// Empty constructor generating a random number (string)
         /// </summary>
         public RTM()
         {
-            random_n = r.Next().ToString();
+            random_n = random_number.Next().ToString();
         }
 
         /// <summary>
-        /// <see href="https://www.rememberthemilk.com/services/api/methods.rtm">RTM Methods API</see>
+        /// RTM constructor which takes <c>AuthKeys</c> keys
         /// </summary>
+        /// <see href="https://www.rememberthemilk.com/services/api/methods.rtm">RTM Methods API</see>
         /// <param name="aka">Passing <c>AuthKeys</c> keys</param>
         public RTM(AuthKeys aka)
         {
             authentication = aka;
             meetup_inst = new MeetUp(aka);
-            random_n = r.Next().ToString();
+            random_n = random_number.Next().ToString();
         }
 
         /// <summary>
@@ -97,7 +98,6 @@ namespace MeetupToRTM.RememberTM_Helpers
                     }
 
                     CreateAuthFile("authtoken.authtoken", authResponse.Auth.Token);
-
                 }
                 else
                 {
@@ -106,7 +106,6 @@ namespace MeetupToRTM.RememberTM_Helpers
                     MainWindow.SetLoggingMessage_Other("RTM: Read from existing authtoken file: " + file_text);
                     RtmConnectionHelper.SetApiAuthToken(file_text);
                 }
-
             }
         }
 
@@ -137,7 +136,7 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// <param name="mu_venue_strings"></param>
         /// <param name="checkbox"></param>
         /// </summary>
-        public void SetRTMTasks(List<MeetupJSONEventResults> mu_data, List<string> mu_data_strings,
+        public void SetRTMTasks(List<MeetupJSONEventResults> mu_data, List<RTM_Meetup_Tasks> mu_data_strings,
                                 List<string> mu_venue_strings, bool checkbox)
         {
             string msg = "RTM: we are creating a new set of tasks";
@@ -170,17 +169,19 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// checking if task already exist, then skip
         /// </summary>
         /// <see href="https://stackoverflow.com/questions/9524681/find-if-lista-contains-any-elements-not-in-listb"/>
-        /// <param name="addAllTasks"></param>
+        /// <param name="addAllTasks">by default it should be true</param>
         private void AddTasks(bool addAllTasks)
         {
-            if (addAllTasks == true)
+            timeline = GetRTMTimeline();
+
+            if (addAllTasks)
             {
                 try
                 {
                     foreach (var task_str in mu_event)
                     {
-                        logTasks(task_str);
-                        RtmApiResponse created_task = RtmMethodHelper.AddTask(timeline, task_str, parse: "1");
+                        logTasks(task_str.Long_Task_Description);
+                        RtmApiResponse created_task = RtmMethodHelper.AddTask(timeline, task_str.Long_Task_Description, parse: "1");
 
                         list_id = created_task.List.Id;
 

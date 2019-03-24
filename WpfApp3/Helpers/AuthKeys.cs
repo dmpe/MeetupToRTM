@@ -12,7 +12,7 @@
         }
 
         /// <summary>
-        /// Fetch user provided API Keys
+        /// Set user provided API Keys
         /// </summary>
         /// <param name="myRTMkey"></param>
         /// <param name="myRTMsecret"></param>

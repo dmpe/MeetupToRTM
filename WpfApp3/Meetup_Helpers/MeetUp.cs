@@ -14,53 +14,64 @@ using Newtonsoft.Json;
 
 namespace MeetupToRTM.MeetupHelpers
 {
+    public class RTM_Meetup_Tasks
+    {
+        private string meetup_id;
+        private string long_description_input;
+        private string short_description_title_field;
+
+        public string MeetupID { get => meetup_id; set => meetup_id = value; }
+        public string Long_Task_Description { get => long_description_input; set => long_description_input = value; }
+        public string Short_Task_Description { get => short_description_title_field; set => short_description_title_field = value; }
+
+        public RTM_Meetup_Tasks(string id, string input_long, string task_field_short)
+        {
+            this.meetup_id = id;
+            this.long_description_input = input_long;
+            this.short_description_title_field = task_field_short;
+        }
+
+        public RTM_Meetup_Tasks()
+        {
+        }
+    }
+
+
     public class MeetUp
     {
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         // Meetup final variables
         // source object
-        public static readonly string format = "json";
-        public static readonly string host = "https://api.meetup.com";
-        public static readonly byte version = 2;
-        public static readonly string self = "self";
-        public static readonly string events = "events";
         public static readonly string status = "upcoming";
         public static readonly string scroll = "next_upcoming";
         public static readonly bool sign = true;
-        public readonly AuthKeys ak = null;
+        public readonly AuthKeys keys = null;
 
-        List<MeetupJSONEventResults> list_meetup_event_res = null;
-        List<string> list_meetup_venue_res = null;
-        List<string> rtm_string_tasks_long = null;
-        List<string> rtm_string_tasks_short = null;
+        List<MeetupJSONEventResults> list_of_meetup_events = null;
+        List<RTM_Meetup_Tasks> rtm_string_tasks = new List<RTM_Meetup_Tasks>();
 
-        public string event_meetup = string.Empty;
-        public string event_meetup_venue = string.Empty;
-
+        List<string> list_meetup_venue_res = new List<string>();
+        
         public MeetUp()
         {
-
         }
 
         public MeetUp(AuthKeys aka)
         {
-            ak = aka;
-            rtm_string_tasks_long = new List<string>();
-            rtm_string_tasks_short = new List<string>();
-            list_meetup_venue_res = new List<string>();
+            keys = aka;
         }
 
         /// <summary>
         /// Creates Flurl-based URL which can access MeetUp data
         /// </summary>
-        /// <param name="meetup_api_key">MeetUp Key provided by the user in GUI</param>
-        /// <returns>URL which returns JSON output</returns>
+        /// <param name="meetup_api_key">MeetUp Key provided by the user in the GUI</param>
+        /// <returns>URL which is called for the JSON output</returns>
         public string SetMeetupURL(string meetup_api_key)
         {
-            var my_url = host
-                .AppendPathSegment(self)
-                .AppendPathSegment(events)
+            var my_url = "https://api.meetup.com"
+                .AppendPathSegment("self")
+                .AppendPathSegment("events")
                 .SetQueryParams(new
                 {
                     sign,
@@ -97,18 +108,18 @@ namespace MeetupToRTM.MeetupHelpers
 
             try
             {
-                list_meetup_event_res = JsonConvert.DeserializeObject<List<MeetupJSONEventResults>>(content);
+                list_of_meetup_events = JsonConvert.DeserializeObject<List<MeetupJSONEventResults>>(content);
             }
             catch (JsonException ex)
             {
                 logger.Error(ex, "Could not deserialize JSON Object");
             }
 
-            return list_meetup_event_res;
+            return list_of_meetup_events;
         }
 
         /// <summary>
-        /// If there are zero events, log it to the user as well
+        /// If there are zero events, log this information to the user as well
         /// </summary>
         /// <param name="list_meetup_event_res">List of <c>MeetupJSONEventResults</c> events</param>
         public void ValidateMeetupData(List<MeetupJSONEventResults> list_meetup_event_res)
@@ -127,59 +138,44 @@ namespace MeetupToRTM.MeetupHelpers
         /// <summary>
         /// Returns a sample of data, i.e. URL links
         /// </summary>
-        /// <param name="list_meetup_event_res">URL event links</param>
-        public void GetSampleData(List<MeetupJSONEventResults> list_meetup_event_res)
+        /// <param name="list_of_meetup_events_url_links">URL event links</param>
+        public void GetSampleData(List<MeetupJSONEventResults> list_of_meetup_events_url_links)
         {
-            foreach (var item in list_meetup_event_res)
+            foreach (var item in list_of_meetup_events_url_links)
             {
                 Console.WriteLine(item.Link);
             }
         }
 
         /// <summary>
-        /// Create a list of strings which are later passed to RTM for parsing and establishing RTM tasks
+        /// Create a list of "strings" (tasks) which are later passed to RTM for parsing and establishing RTM tasks
         /// </summary>
-        /// <param name="list_meetup_res">List of events, from <c>GetMeetupData</c> method</param>
+        /// <param name="list_meetup_results">List of events, from <c>GetMeetupData</c> method</param>
         /// <seealso cref="GetMeetupData(string URL)"/>
-        /// <returns>A list of strings which are pushed to become RTM tasks</returns>
-        public List<string> SetMeetupTasks_FinalRTMStringList(List<MeetupJSONEventResults> list_meetup_res)
+        /// <returns>A list of strings/events which are pushed to become RTM tasks</returns>
+        public List<RTM_Meetup_Tasks> Create_RTM_Tasks_From_Events(List<MeetupJSONEventResults> list_meetup_results)
         {
-            foreach (var item in list_meetup_res)
+            foreach (var item in list_meetup_results)
             {
-                event_meetup = string.Concat("ID-MeetupRTM: ", item.Id, " ", 
+                string event_meetup_long = string.Concat("ID-MeetupRTM: ", item.Id, " ", 
                     DeleteChars(item.Name), " ",
                     ConvertToEUDate(item.Local_date), " ",
                     item.Local_time, " ",
                     item.Link, " ");
+                string event_meetup_short = string.Concat("ID-MeetupRTM: ", item.Id, " ", DeleteChars(item.Name));
 
-                logger.Info(event_meetup);
-                MainWindow.SetLoggingMessage_Other(event_meetup);
+                logger.Info(event_meetup_long);
+                MainWindow.SetLoggingMessage_Other(event_meetup_long);
 
-                rtm_string_tasks_long.Add(event_meetup);
+                RTM_Meetup_Tasks rtm_task = new RTM_Meetup_Tasks(item.Id, event_meetup_long, event_meetup_short);
+                rtm_string_tasks.Add(rtm_task);
             }
 
-            return rtm_string_tasks_long;
+            return rtm_string_tasks;
         }
 
         /// <summary>
-        /// If RTM was able to parse strings and create tasks from them, this method recreates final tasks names that are now in RTM itself.
-        /// This method does not call any RTM API.
-        /// </summary>
-        /// <param name="list_meetup_res"></param>
-        /// <returns>a list of tasks as they are now stored in RTM</returns>
-        public List<string> GetMeetupTasks_FinalRTMStringList(List<MeetupJSONEventResults> list_meetup_res)
-        {
-            foreach (var item in list_meetup_res)
-            {
-                event_meetup = string.Concat("ID-MeetupRTM: ", item.Id, " ", DeleteChars(item.Name));
-                rtm_string_tasks_short.Add(event_meetup);
-            }
-
-            return rtm_string_tasks_short;
-        }
-
-        /// <summary>
-        /// Prepares a list of events       
+        /// Prepares a list of venues for events       
         /// </summary>
         /// <param name="list_meetup_res"></param>
         /// <returns>Return a list of venues for events</returns>
@@ -187,6 +183,7 @@ namespace MeetupToRTM.MeetupHelpers
         {
             foreach (var item in list_meetup_res)
             {
+                string event_meetup_venue = string.Empty;
                 try
                 {
                     event_meetup_venue = string.Concat("\n Name: ", item.Venue.Name, "\n",
@@ -216,8 +213,8 @@ namespace MeetupToRTM.MeetupHelpers
         public string DeleteChars(string name)
         {
             string new_name = Regex.Replace(name, "[—?@–#&!$%-=]", "", RegexOptions.Compiled);
-            string new_name2 = Regex.Replace(new_name, @"[\d-]", "", RegexOptions.Compiled);
-            return new_name2;
+            new_name = Regex.Replace(new_name, @"[\d-]", "", RegexOptions.Compiled);
+            return new_name;
         }
 
         /// <summary>

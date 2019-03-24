@@ -51,12 +51,11 @@ namespace MeetupToRTM
             LoggingListBox.ItemsSource = ListBoxData;
         }
 
-        /// <summary>
-        /// <see href="https://www.newtonsoft.com/json">newtonsoft.com/json</see>
-        /// <see href="https://www.meetup.com/meetup_api/docs/self/events/">Meetup Events API Documentation</see>
-        /// 
+        /// <summary 
         /// This is main method for converting meetup data into RTM tasks
         /// </summary>
+        /// <see href="https://www.newtonsoft.com/json">newtonsoft.com/json</see>
+        /// <see href="https://www.meetup.com/meetup_api/docs/self/events/">Meetup Events API Documentation</see>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public void Click_Button(object sender, RoutedEventArgs e)
@@ -73,7 +72,7 @@ namespace MeetupToRTM
 
             //meetup_inst.GetSampleData(mu_data); // for testing
 
-            var mu_event = meetup_inst.SetMeetupTasks_FinalRTMStringList(mu_data);
+            var mu_event = meetup_inst.Create_RTM_Tasks_From_Events(mu_data);
             var mu_event_vanue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(mu_data);
 
             rtm.SetRTMTasks(mu_data, mu_event, mu_event_vanue, checkbox_value);
@@ -93,21 +92,20 @@ namespace MeetupToRTM
 
         /// <summary>
         /// Used for CheckBox, i.e. if true, then skip adding duplicates
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CheckForExisitingRTMTasksFromThisApplication_Checked(object sender, RoutedEventArgs e)
+        private void CheckForExisitingRTMTasks_Checked(object sender, RoutedEventArgs e)
         {
             Handle_Checkbox(sender as CheckBox);
         }
 
         /// <summary>
-        /// Otherwise add them = by default
+        /// Otherwise add them, which is also by default
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CheckForExisitingRTMTasksFromThisApplication_UnChecked(object sender, RoutedEventArgs e)
+        private void CheckForExisitingRTMTasks_UnChecked(object sender, RoutedEventArgs e)
         {
             Handle_Checkbox(sender as CheckBox);
         }
@@ -123,7 +121,7 @@ namespace MeetupToRTM
         }
 
         /// <summary>
-        /// 
+        /// Log messages to ListBox on the right
         /// </summary>
         /// <param name="str"></param>
         public static void SetLoggingMessage_Other(string str)
@@ -141,10 +139,10 @@ namespace MeetupToRTM
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.C)
             {
-                string s = LoggingListBox.SelectedItem.ToString();
-                Clipboard.SetText(s);
+                string selectedString = LoggingListBox.SelectedItem.ToString();
+                Clipboard.SetText(selectedString);
 
-                //Console.WriteLine(s);
+                logger.Info(selectedString);
                 string info = "Copied to the clipboard";
                 SetLoggingMessage_Other(info);
                 logger.Info(info);
