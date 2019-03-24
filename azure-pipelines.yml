@@ -17,13 +17,16 @@ variables:
 steps:
 - task: NuGetToolInstaller@0
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-  
 - checkout: self
   submodules: true
-  
+  displayName: Download submodules
+
+- task: NugetRestore@2
+  displayName: Restore nuget MeetupToRTM.csproj
+  inputs: 
+    command: restore
+  solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
