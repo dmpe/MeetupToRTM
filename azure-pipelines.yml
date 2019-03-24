@@ -21,6 +21,17 @@ steps:
   submodules: true
   displayName: Download submodules
 
+- task: SonarSource.sonarqube.15B84CA1-B62F-4A2A-A403-89B77A063157.SonarQubePrepare@4
+  displayName: 'Prepare analysis on SonarQube'
+  inputs:
+    SonarQube: 'SonarCloud'
+    projectKey: dmpe_MeetupToRTM
+    projectName: MeetupToRTM
+    projectVersion: '$(AssemblyVersion)'
+    extraProperties: |
+     sonar.organization=dmpe-github
+     sonar.branch.name=master
+
 - task: NugetRestore@1
   displayName: Restore nuget packages for RememberTheMilkApi.sln
   inputs: 
@@ -32,7 +43,6 @@ steps:
   inputs:
     solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
     platform: '$(buildPlatform)'
-    restoreNugetPackages: true
     configuration: '$(buildConfiguration)'
 
 - task: PublishPipelineArtifact@0
@@ -41,7 +51,8 @@ steps:
     targetPath: $(Build.SourcesDirectory)
 
 - script: |
-    dir $(Build.SourcesDirectory)\WpfApp3\packages /s
+    dir $(Build.ArtifactStagingDirectory)
+    dir $(Build.SourcesDirectory)
 
 - task: NugetRestore@2
   displayName: Restore nuget MeetupToRTM.csproj
@@ -56,10 +67,12 @@ steps:
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
-    restoreNugetPackages: true
     configuration: '$(buildConfiguration)'
 
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    
+- task: SonarSource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@4
+  displayName: 'Run Code Analysis'
