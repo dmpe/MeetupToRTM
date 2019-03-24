@@ -12,7 +12,7 @@ pool:
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Debug'
+  buildConfiguration: 'Release'
 
 steps:
 - task: NuGetToolInstaller@0
@@ -47,11 +47,11 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: CopyFiles@2
-  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  displayName: 'Copy Files to: $(build.ArtifactStagingDirectory)'
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
     Contents: '**\bin\$(BuildConfiguration)\*.dll'
-    TargetFolder: '$(build.artifactstagingdirectory)'
+    TargetFolder: '$(build.ArtifactStagingDirectory)'
     CleanTargetFolder: true
     OverWrite: true
   condition: succeededOrFailed()
@@ -66,11 +66,14 @@ steps:
     OverWrite: true
   condition: succeededOrFailed()
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
+- task: CopyFiles@2
+  displayName: 'Copy Files from artefact dir to SourcesDirectory\bin\x86\Debug'
   inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-    ArtifactName: RememberTheMilkApi.dll
+    SourceFolder: '$(system.ArtifactStagingDirectory)\'
+    Contents: 'RememberTheMilkApi.dll'
+    TargetFolder: '$(Build.SourcesDirectory)\bin\x86\Debug'
+    CleanTargetFolder: true
+    OverWrite: true
   condition: succeededOrFailed()
 
 - script: |
