@@ -21,7 +21,7 @@ You will need to have 2 API keys:
 ![image](rtm_meetup.PNG)
 
 
-# Building/Testin Application
+# Building/Testing MeetupToRTM
 
 An attempt was made to use Azure Pipelines for CI/CD. 
 See here <https://johnmalc.visualstudio.com/GitHubRepos/_build/>
