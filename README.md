@@ -25,7 +25,7 @@ You will need to have 2 API keys:
  - API Keys from RTM <https://www.rememberthemilk.com/services/api/>
 
 ![image](rtm_meetup.PNG)
-
+![image](rtm_smartlist.PNG)
 
 # Building/Testing MeetupToRTM
 
