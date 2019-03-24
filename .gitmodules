@@ -1,0 +1,4 @@
+[submodule "RememberTheMilkApi"]
+	path = RememberTheMilkApi
+	url = ../RememberTheMilkApi.git
+	branch = merged_branch_with_all_changes
