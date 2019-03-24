@@ -26,7 +26,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
-  checkout: self  
+  - checkout: self  
 
 - task: VSBuild@1
   inputs:
