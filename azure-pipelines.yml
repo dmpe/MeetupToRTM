@@ -37,7 +37,7 @@ steps:
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: 'RememberTheMilkApi.dll'
-    targetPath: $(Build.SourcesDirectory)\WpfApp3\packages'
+    targetPath: $(Build.SourcesDirectory)\WpfApp3\packages
 
 - script: |
     dir $(Build.SourcesDirectory)\WpfApp3\packages /s
