@@ -90,7 +90,7 @@ steps:
 - task: GitHubRelease@0
   displayName: 'GitHub release draft'
   inputs:
-    gitHubConnection: '$(Parameters.gitHubConnection)'
+    gitHubConnection: dmpe
     repositoryName: dmpe/MeetupToRTM
     title: '$(Parameters.title)'
     isPreRelease: true
