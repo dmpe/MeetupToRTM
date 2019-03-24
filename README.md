@@ -26,7 +26,6 @@ You will need to have 2 API keys:
 
 ![image](rtm_meetup.PNG)
 ![image2](rtm_smartlist.PNG)
-![image3](ClassDiagram_MeetupToRTM.png)
 
 # Building/Testing MeetupToRTM
 
@@ -38,6 +37,11 @@ How to update submodule to point to the latest changes?
 cd MeetupToRTM
 git submodule update --remote 
 ```
+
+**Class Diagramm anybody ? Sure here we go:**
+
+![image3](ClassDiagram_MeetupToRTM.png)
+
 
 # Achievements
 
