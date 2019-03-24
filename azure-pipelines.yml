@@ -66,6 +66,16 @@ steps:
     OverWrite: true
   condition: succeededOrFailed()
 
+- task: CopyFiles@2
+  displayName: 'Copy Files to: bin/debug'
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi'
+    Contents: '**\bin\$(BuildConfiguration)\*.dll'
+    TargetFolder: '$(Build.SourcesDirectory)\bin\x86\Debug'
+    CleanTargetFolder: true
+    OverWrite: true
+  condition: succeededOrFailed()
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   inputs:
