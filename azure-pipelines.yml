@@ -66,16 +66,6 @@ steps:
     OverWrite: true
   condition: succeededOrFailed()
 
-- task: CopyFiles@2
-  displayName: 'Copy Files to: bin/debug'
-  inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: '**\bin\$(BuildConfiguration)\*.dll'
-    TargetFolder: '$(Build.SourcesDirectory)'
-    CleanTargetFolder: true
-    OverWrite: true
-  condition: succeededOrFailed()
-
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   inputs:
