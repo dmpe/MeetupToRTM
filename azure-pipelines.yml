@@ -62,7 +62,7 @@ steps:
     SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\Release\'
     Contents: 'RememberTheMilkApi.dll'
     TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\'
-    CleanTargetFolder: true
+    CleanTargetFolder: false
     OverWrite: true
   condition: succeededOrFailed()
 
