@@ -69,7 +69,7 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Files from artefact dir to SourcesDirectory\bin\x86\Debug'
   inputs:
-    SourceFolder: '$(system.ArtifactStagingDirectory)\'
+    SourceFolder: '$(build.ArtifactStagingDirectory)\'
     Contents: 'RememberTheMilkApi.dll'
     TargetFolder: '$(Build.SourcesDirectory)\bin\x86\Debug'
     CleanTargetFolder: true
