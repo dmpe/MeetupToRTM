@@ -60,7 +60,7 @@ steps:
   displayName: 'Copy Files to: $(Build.SourcesDirectory)'
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: '**\bin\$(BuildConfiguration)\*.dll'
+    Contents: '**\bin\$(BuildConfiguration)\RememberTheMilkApi.dll'
     TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\packages\'
     CleanTargetFolder: true
     OverWrite: true
@@ -72,11 +72,6 @@ steps:
     PathtoPublish: '$(build.artifactstagingdirectory)'
     ArtifactName: RememberTheMilkApi.dll
   condition: succeededOrFailed()
-
-- task: DownloadPipelineArtifact@1
-  displayName: 'Download Pipeline Artifact'
-  inputs:
-    downloadPath: '$(Build.SourcesDirectory)\WpfApp3\packages'
 
 - script: |
     dir $(Build.ArtifactStagingDirectory) /s
