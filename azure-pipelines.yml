@@ -83,8 +83,10 @@ steps:
 - task: GitHubRelease@0
   displayName: 'GitHub release draft'
   inputs:
+    action: 'create'
     gitHubConnection: dmpe
     repositoryName: dmpe/MeetupToRTM
-    title: '$(Parameters.title)'
+    title: "New Release"
+    assets: $(Build.ArtifactStagingDirectory)/* 
     isPreRelease: true
   continueOnError: true
