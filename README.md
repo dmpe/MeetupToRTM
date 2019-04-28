@@ -29,7 +29,7 @@ You will need to have 2 API keys:
 
 # Building/Testing MeetupToRTM
 
-I use Azure Pipelines for CI/CD. See here <https://johnmalc.visualstudio.com/GitHubRepos/_build/>
+I use Azure Pipelines for CI/CD. See here <https://johnmalc.visualstudio.com/MeetupToRTM/>
 
 How to update submodule to point to the latest changes?
 
