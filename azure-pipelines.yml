@@ -15,39 +15,44 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@0
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: 'SonarQube Cloud io'
+    scannerMode: 'MSBuild'
+    projectKey: 'dmpe_MeetupToRTM'
+    projectName: 'MeetupToRTM'
+    extraProperties: |
+     sonar.organization=dmpe-github
+     sonar.branch.name=master
+  continueOnError: true
+  condition: succeededOrFailed() 
+
+- task: NuGetToolInstaller@1
 
 - checkout: self
   submodules: true
   displayName: Download submodules
 
-- task: SonarSource.sonarqube.15B84CA1-B62F-4A2A-A403-89B77A063157.SonarQubePrepare@4
-  displayName: 'Prepare analysis on SonarQube'
-  inputs:
-    SonarQube: 'SonarQube Cloud io'
-    projectKey: 'dmpe_MeetupToRTM'
-    projectName: MeetupToRTM
-    extraProperties: |
-     sonar.organization=dmpe-github
-     sonar.branch.name=master
-  continueOnError: true
-  condition: succeededOrFailed()
-
-- task: NugetRestore@1
+- task: NugetRestore@2
   displayName: Restore nuget packages for RememberTheMilkApi.sln
   inputs: 
     command: restore
     solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
+    feedsToUse: 'select'
 
 - task: VSBuild@1
-  displayName: Building RememberTheMilkApi solution
+  displayName: Building RememberTheMilkApi solution, a submodule
   inputs:
-    solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
+    solution: '$(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    clean: true
+    maximumCpuCount: true
+    restoreNugetPackages: true
+    msbuildArchitecture: 'x64'
 
 - task: CopyFiles@2
-  displayName: 'Copy Files to RTM lib to $(Build.SourcesDirectory) where MeetupToRTM.csproj loads it'
+  displayName: 'Copy Files to RTM lib of the $(Build.SourcesDirectory) where MeetupToRTM.csproj loads it'
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\Release\'
     Contents: 'RememberTheMilkApi.dll'
@@ -65,20 +70,25 @@ steps:
   inputs: 
     command: restore
     solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
+    feedsToUse: 'select'
 
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    clean: true
+    maximumCpuCount: true
+    restoreNugetPackages: true
+    msbuildArchitecture: 'x64'
 
 #- task: VSTest@2
 #  inputs:
 #    platform: '$(buildPlatform)'
 #    configuration: '$(buildConfiguration)'
+#    codeCoverageEnabled: true
 
-- task: SonarSource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@4
-  displayName: 'Run Code Analysis'
+- task: SonarQubeAnalyze@4
 
 - task: GitHubRelease@0
   displayName: 'GitHub release draft'
