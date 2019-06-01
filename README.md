@@ -46,4 +46,5 @@ git submodule update --remote
 
 # Achievements
 
-In order to make this application work, I had to fork and submit patches to the <https://github.com/dmpe/RememberTheMilkApi>, including `merged_branch_with_all_changes` branch.
+In order to make this application work, I had to fork and submit patches to the <https://github.com/dmpe/RememberTheMilkApi>, see `merged_branch_with_all_changes` branch. 
+Indeed, this programm depends on the upstream RTM library.

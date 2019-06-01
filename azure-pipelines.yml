@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'VS2017-Win2016'
+  vmImage: 'windows-2019'
 
 variables:
   solution: '**/*.sln'
@@ -83,8 +83,10 @@ steps:
 - task: GitHubRelease@0
   displayName: 'GitHub release draft'
   inputs:
+    action: 'create'
     gitHubConnection: dmpe
     repositoryName: dmpe/MeetupToRTM
-    title: '$(Parameters.title)'
+    title: "New Release"
+    assets: $(Build.ArtifactStagingDirectory)/* 
     isPreRelease: true
   continueOnError: true
