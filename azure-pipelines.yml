@@ -71,12 +71,11 @@ steps:
     feedsToUse: 'select'
 
 - task: VSBuild@1
+  displayName: Build MeetupToRTM.csproj, create exe file
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    maximumCpuCount: true
-    msbuildArchitecture: 'x64'
 
 #- task: VSTest@2
 #  inputs:
