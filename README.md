@@ -1,19 +1,20 @@
-[![Build Status](https://johnmalc.visualstudio.com/GitHubRepos/_apis/build/status/dmpe.MeetupToRTM?branchName=master)](https://johnmalc.visualstudio.com/GitHubRepos/_build/latest?definitionId=4&branchName=master)
+[![Build Status](https://johnmalc.visualstudio.com/MeetupToRTM/_apis/build/status/dmpe.MeetupToRTM?branchName=master)](https://johnmalc.visualstudio.com/MeetupToRTM/_build/latest?definitionId=4&branchName=master)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=alert_status)](https://sonarcloud.io/dashboard?id=dmpe_MeetupToRTM) 
 [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=dmpe_MeetupToRTM)
 [![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=dmpe_MeetupToRTM)
-![GitHub](https://img.shields.io/github/license/dmpe/MeetupToRTM.svg?style=for-the-badge)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=code_smells)](https://sonarcloud.io/dashboard?id=dmpe_MeetupToRTM)
+![GitHub](https://img.shields.io/github/license/dmpe/MeetupToRTM.svg)
  
 # MeetupToRTM: C# .NetFramework 4.7 Desktop Application
 
 ## Objective:
  - Export your upcoming Meetup.com events into Remember The Milk tasks.
-   - Thus replacing a paid functionality available through <https://www.rememberthemilk.com/services/ifttt/>
+   - Thus replacing a paid functionality available through [IFTTT](https://www.rememberthemilk.com/services/ifttt/)
 
 ### Features/TODO:
- - Fetches your [meetup events](https://www.meetup.com/meetup_api/docs/self/events/) and converts them to tasks via format <ID-MeetupRTM: _meetupEventID_ _MeetupName_>. 
+ - Fetches your [meetup events](https://www.meetup.com/meetup_api/docs/self/events/) and converts them to tasks. The format used is <ID-MeetupRTM: _meetupEventID_ _MeetupName_>. 
  
- - [ ] In case, the of frequent use, the app can recognize already added tasks (through above format) and will skip adding them again. Therefore de-cluttering your list and avoding adding duplicates. :yum:
+ - [ ] In case, the of frequent use, the app can recognize already added tasks (through abovementioned format) and will skip adding them again. Therefore de-cluttering your list and avoding duplicates. :yum:
 
  - [ ] For testing, use secret keys <https://stackoverflow.com/questions/50299066/how-to-pass-secrets-into-the-test-execution-context-from-vsts>
 
@@ -29,7 +30,7 @@ You will need to have 2 API keys:
 
 # Building/Testing MeetupToRTM
 
-I use Azure Pipelines for CI/CD. See here <https://johnmalc.visualstudio.com/GitHubRepos/_build/>
+I use Azure Pipelines for CI/CD. See here <https://johnmalc.visualstudio.com/MeetupToRTM/_build/>
 
 How to update submodule to point to the latest changes?
 
