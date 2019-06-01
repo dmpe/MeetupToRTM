@@ -46,7 +46,6 @@ steps:
     solution: '$(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    clean: true
     maximumCpuCount: true
     msbuildArchitecture: 'x64'
 
@@ -76,7 +75,6 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    clean: true
     maximumCpuCount: true
     msbuildArchitecture: 'x64'
 
