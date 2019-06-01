@@ -85,16 +85,15 @@ steps:
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\*test*.dll
-      !**\*TestAdapter.dll
-      !**\obj\**'
+    testAssemblyVer2: '!**\obj\**
+      $(Build.SourcesDirectory)\UnitTesting\**'
     searchFolder: '$(System.DefaultWorkingDirectory)'
     codeCoverageEnabled: true
 
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
-    testResultsFiles: '**/*.xml'
+    testResultsFiles: '**/UnitTesting.xml'
 
 
 #- task: VSTest@2
