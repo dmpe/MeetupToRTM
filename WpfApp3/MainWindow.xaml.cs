@@ -38,16 +38,6 @@ namespace MeetupToRTM
 
             ListBoxData = new ObservableCollection<string>() { "Used for logging..." };
 
-            ak = new AuthKeys
-            {
-                MyRTMkey = RTMkey.Text,
-                MyRTMsecret = RTMsecret.Text,
-                MyMeetupKey = MeetupKey.Text
-            };
-
-            meetup_inst = new MeetUp(ak);
-            rtm = new RTM(ak);
-
             LoggingListBox.ItemsSource = ListBoxData;
         }
 
@@ -60,6 +50,16 @@ namespace MeetupToRTM
         /// <param name="e"></param>
         public void Click_Button(object sender, RoutedEventArgs e)
         {
+            ak = new AuthKeys
+            {
+                MyRTMkey = RTMkey.Text,
+                MyRTMsecret = RTMsecret.Text,
+                MyMeetupKey = MeetupKey.Text
+            };
+
+            meetup_inst = new MeetUp(ak, RTM_Web_UI_Format.Text);
+            rtm = new RTM(ak);
+
             // initiate connection
             SetLoggingMessage_Other("RTM: Innitiate Connection...now...");
             rtm.InitiateConnection(ak);

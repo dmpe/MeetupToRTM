@@ -21,7 +21,7 @@ namespace MeetupToRTM.RememberTM_Helpers
 
         private List<MeetupJSONEventResults> mu_data = null;
         private List<string> mu_venue = null;
-        private List<RTM_Meetup_Tasks> mu_event = null;
+        private List<RtmMeetupTasks> mu_event = null;
 
         private readonly string random_n;
         private readonly Random random_number = new Random();
@@ -136,7 +136,7 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// <param name="mu_venue_strings"></param>
         /// <param name="checkbox"></param>
         /// </summary>
-        public void SetRTMTasks(List<MeetupJSONEventResults> mu_data, List<RTM_Meetup_Tasks> mu_data_strings,
+        public void SetRTMTasks(List<MeetupJSONEventResults> mu_data, List<RtmMeetupTasks> mu_data_strings,
                                 List<string> mu_venue_strings, bool checkbox)
         {
             string msg = "RTM: we are creating a new set of tasks";
@@ -180,7 +180,7 @@ namespace MeetupToRTM.RememberTM_Helpers
                 {
                     foreach (var task_str in mu_event)
                     {
-                        logTasks(task_str.Long_Task_Description);
+                        LogTasks(task_str.Long_Task_Description);
                         RtmApiResponse created_task = RtmMethodHelper.AddTask(timeline, task_str.Long_Task_Description, parse: "1");
 
                         list_id = created_task.List.Id;
@@ -289,7 +289,7 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// Log information about tasks
         /// </summary>
         /// <param name="task_str"></param>
-        private void logTasks(string task_str)
+        private void LogTasks(string task_str)
         {
             logger.Info("...............");
             logger.Info(task_str);

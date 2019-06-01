@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Text.RegularExpressions;
 using System.Globalization;
-
 using MeetupToRTM.MeetupJSONHelpers;
-
 using NodaTime.Text;
 using NLog;
 using RestSharp;
@@ -14,24 +12,21 @@ using Newtonsoft.Json;
 
 namespace MeetupToRTM.MeetupHelpers
 {
-    public class RTM_Meetup_Tasks
+    public class RtmMeetupTasks
     {
-        private string meetup_id;
-        private string long_description_input;
-        private string short_description_title_field;
 
-        public string MeetupID { get => meetup_id; set => meetup_id = value; }
-        public string Long_Task_Description { get => long_description_input; set => long_description_input = value; }
-        public string Short_Task_Description { get => short_description_title_field; set => short_description_title_field = value; }
+        public string MeetupID { get; set; }
+        public string Long_Task_Description { get; set; }
+        public string Short_Task_Description { get; set; }
 
-        public RTM_Meetup_Tasks(string id, string input_long, string task_field_short)
+        public RtmMeetupTasks(string id, string input_long, string task_field_short)
         {
-            this.meetup_id = id;
-            this.long_description_input = input_long;
-            this.short_description_title_field = task_field_short;
+            MeetupID = id;
+            Long_Task_Description = input_long;
+            Short_Task_Description = task_field_short;
         }
 
-        public RTM_Meetup_Tasks()
+        public RtmMeetupTasks()
         {
         }
     }
@@ -48,8 +43,10 @@ namespace MeetupToRTM.MeetupHelpers
         public static readonly bool sign = true;
         public readonly AuthKeys keys = null;
 
+        public string RTM_Web_UI { get; set; }
+
         List<MeetupJSONEventResults> list_of_meetup_events = null;
-        List<RTM_Meetup_Tasks> rtm_string_tasks = new List<RTM_Meetup_Tasks>();
+        readonly List<RtmMeetupTasks> rtm_string_tasks = new List<RtmMeetupTasks>();
 
         List<string> list_meetup_venue_res = new List<string>();
         
@@ -60,6 +57,12 @@ namespace MeetupToRTM.MeetupHelpers
         public MeetUp(AuthKeys aka)
         {
             keys = aka;
+        }
+
+        public MeetUp(AuthKeys aka, string RTM_Web_UI_Format)
+        {
+            keys = aka;
+            RTM_Web_UI = RTM_Web_UI_Format;
         }
 
         /// <summary>
@@ -153,21 +156,21 @@ namespace MeetupToRTM.MeetupHelpers
         /// <param name="list_meetup_results">List of events, from <c>GetMeetupData</c> method</param>
         /// <seealso cref="GetMeetupData(string URL)"/>
         /// <returns>A list of strings/events which are pushed to become RTM tasks</returns>
-        public List<RTM_Meetup_Tasks> Create_RTM_Tasks_From_Events(List<MeetupJSONEventResults> list_meetup_results)
+        public List<RtmMeetupTasks> Create_RTM_Tasks_From_Events(List<MeetupJSONEventResults> list_meetup_results)
         {
             foreach (var item in list_meetup_results)
             {
-                string event_meetup_long = string.Concat("ID-MeetupRTM: ", item.Id, " ", 
+                string event_meetup_long = string.Concat(RTM_Web_UI, ": ", item.Id, " ", 
                     DeleteChars(item.Name), " ",
                     ConvertToEUDate(item.Local_date), " ",
                     item.Local_time, " ",
                     item.Link, " ");
-                string event_meetup_short = string.Concat("ID-MeetupRTM: ", item.Id, " ", DeleteChars(item.Name));
+                string event_meetup_short = string.Concat(RTM_Web_UI, ": ", item.Id, " ", DeleteChars(item.Name));
 
                 logger.Info(event_meetup_long);
                 MainWindow.SetLoggingMessage_Other(event_meetup_long);
 
-                RTM_Meetup_Tasks rtm_task = new RTM_Meetup_Tasks(item.Id, event_meetup_long, event_meetup_short);
+                RtmMeetupTasks rtm_task = new RtmMeetupTasks(item.Id, event_meetup_long, event_meetup_short);
                 rtm_string_tasks.Add(rtm_task);
             }
 

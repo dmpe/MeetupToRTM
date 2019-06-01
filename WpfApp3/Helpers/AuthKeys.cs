@@ -2,6 +2,20 @@
 {
     public class AuthKeys
     {
+        /// <summary>
+        /// Get and Set Method
+        /// </summary>
+        public string MyRTMkey { get; set; }
+
+        /// <summary>
+        /// Get and Set Method
+        /// </summary>
+        public string MyRTMsecret { get; set; }
+
+        /// <summary>
+        /// Get and Set Method
+        /// </summary>
+        public string MyMeetupKey { get; set; }
 
         /// <summary>
         /// Empty constructor
@@ -24,19 +38,5 @@
             MyMeetupKey = myMeetupKey;
         }
 
-        /// <summary>
-        /// Get and Set Method
-        /// </summary>
-        public string MyRTMkey { get; set; }
-
-        /// <summary>
-        /// Get and Set Method
-        /// </summary>
-        public string MyRTMsecret { get; set; }
-
-        /// <summary>
-        /// Get and Set Method
-        /// </summary>
-        public string MyMeetupKey { get; set; }
     }
 }

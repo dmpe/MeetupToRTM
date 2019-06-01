@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetupToRTM", "WpfApp3\MeetupToRTM.csproj", "{CEAA8992-0BD1-495E-997F-5829A001E561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "UnitTesting\Tests.csproj", "{C2A5CC31-B75B-4B60-86C0-7990D5ED0240}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CEAA8992-0BD1-495E-997F-5829A001E561} = {CEAA8992-0BD1-495E-997F-5829A001E561}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,8 +18,12 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CEAA8992-0BD1-495E-997F-5829A001E561}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{CEAA8992-0BD1-495E-997F-5829A001E561}.Debug|Any CPU.Build.0 = Debug|x86
-		{CEAA8992-0BD1-495E-997F-5829A001E561}.Release|Any CPU.ActiveCfg = Release|x86
-		{CEAA8992-0BD1-495E-997F-5829A001E561}.Release|Any CPU.Build.0 = Release|x86
+		{CEAA8992-0BD1-495E-997F-5829A001E561}.Release|Any CPU.ActiveCfg = Debug|x86
+		{CEAA8992-0BD1-495E-997F-5829A001E561}.Release|Any CPU.Build.0 = Debug|x86
+		{C2A5CC31-B75B-4B60-86C0-7990D5ED0240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2A5CC31-B75B-4B60-86C0-7990D5ED0240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2A5CC31-B75B-4B60-86C0-7990D5ED0240}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2A5CC31-B75B-4B60-86C0-7990D5ED0240}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
