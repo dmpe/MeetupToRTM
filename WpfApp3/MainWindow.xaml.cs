@@ -55,34 +55,22 @@ namespace MeetupToRTM
         {
             KeyDataCollection keyCol = null;
             string[] key_array = null;
-            string MeetupKey;
-            string RTMkey;
-            string RTMsecret;
             try
             {
                 // This will get the current PROJECT directory
                 string currentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                 string projectDirectory = Path.Combine(currentDirectory + "\\RTM_Meetup_secrets.ini");
                 var parser = new FileIniDataParser();
-                if (File.Exists(projectDirectory))
-                {
-                    IniData data = parser.ReadFile(projectDirectory);
-                    keyCol = data["private_information"];
-                    MeetupKey = keyCol["MeetupKey_file"];
-                    RTMkey = keyCol["RTMkey_file"];
-                    RTMsecret = keyCol["RTMsecret_file"];
-                }
-                else
-                {
-                    MeetupKey = string.Empty;
-                    RTMkey = string.Empty;
-                    RTMsecret = string.Empty;
-                }
+                IniData data = parser.ReadFile(projectDirectory);
+                keyCol = data["private_information"];
+            }
+            catch
+            {
+                string MeetupKey = keyCol["MeetupKey_file"] ?? null;
+                string RTMkey = keyCol["RTMkey_file"] ?? null;
+                string RTMsecret = keyCol["RTMsecret_file"] ?? null;
                 key_array = new string[] { MeetupKey, RTMkey, RTMsecret };
                 logger.Info("our keys: " + key_array[0] + " ..." + key_array[1] + " ..." + key_array[2]);
-            } catch(FileNotFoundException ex) 
-            {
-                logger.Error(ex);
             }
             return key_array;
         }
