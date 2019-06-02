@@ -3,6 +3,7 @@
 [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=dmpe_MeetupToRTM)
 [![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=dmpe_MeetupToRTM)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=code_smells)](https://sonarcloud.io/dashboard?id=dmpe_MeetupToRTM)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=coverage)](https://sonarcloud.io/dashboard?id=dmpe_MeetupToRTM)
 ![GitHub](https://img.shields.io/github/license/dmpe/MeetupToRTM.svg)
  
 # MeetupToRTM: C# .NetFramework 4.7 Desktop Application
@@ -12,9 +13,11 @@
    - Thus replacing a paid functionality available through [IFTTT](https://www.rememberthemilk.com/services/ifttt/)
 
 ### Features/TODO:
- - Fetches your [meetup events](https://www.meetup.com/meetup_api/docs/self/events/) and converts them to tasks. The format used is <ID-MeetupRTM: _meetupEventID_ _MeetupName_>. 
+ - Fetches your [meetup events](https://www.meetup.com/meetup_api/docs/self/events/) and converts them to tasks. 
+   The format used, by default and which can be also adjusted, is <ID-MeetupRTM: _meetupEventID_ _MeetupName_>. 
  
- - [ ] In case, the of frequent use, the app can recognize already added tasks (through abovementioned format) and will skip adding them again. Therefore de-cluttering your list and avoding duplicates. :yum:
+ - [ ] In case of a frequent use, the app can recognize already added tasks (through abovementioned format) and will skip adding them again. 
+       Therefore de-cluttering your list and avoding duplicates. :yum:
 
  - [ ] For testing, use secret keys <https://stackoverflow.com/questions/50299066/how-to-pass-secrets-into-the-test-execution-context-from-vsts>
 
