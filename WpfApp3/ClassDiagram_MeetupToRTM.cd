@@ -1,12 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
-  <Class Name="MeetupToRTM.App">
-    <Position X="9.75" Y="6" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>App.xaml.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="MeetupToRTM.AuthKeys">
     <Position X="7.25" Y="3.5" Width="2" />
     <TypeIdentifier>
@@ -22,17 +15,10 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="MeetupToRTM.MeetupHelpers.RTM_Meetup_Tasks">
-    <Position X="6.25" Y="0.5" Width="3" />
-    <TypeIdentifier>
-      <HashCode>AIAAAAACAAAAAAAAgAAAAAAAAABAAAAAAAAABAAAQAA=</HashCode>
-      <FileName>Meetup_Helpers\MeetUp.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="MeetupToRTM.MeetupHelpers.MeetUp">
     <Position X="1.75" Y="0.5" Width="4" />
     <TypeIdentifier>
-      <HashCode>EQQAAgAgAAAIQCBCQgAYAAAAAAAAACAAAAAAAAEAAAA=</HashCode>
+      <HashCode>EQQAAgAgAAAIQCBCQgAYAAEAAAAAACAAAAAAAAEAAAA=</HashCode>
       <FileName>Meetup_Helpers\MeetUp.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -53,23 +39,18 @@
       <FileName>Meetup_Helpers\MeetUp_Classes.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MeetupToRTM.Properties.Resources">
-    <Position X="7.25" Y="6" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="MeetupToRTM.Properties.Settings">
-    <Position X="11.5" Y="6" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Class>
   <Class Name="MeetupToRTM.RememberTM_Helpers.RTM">
     <Position X="9.5" Y="0.5" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>IAAAEAQhBKAAIAACAAEAAAAAAAIAAQAAYBgAAAAAQAA=</HashCode>
+      <HashCode>IAAAEAQhAKAAIAACAAEAAAAAAAIAAQAAYBgEAAAAQAA=</HashCode>
       <FileName>RememberTM_Helpers\RTM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeetupToRTM.MeetupHelpers.RtmMeetupTasks">
+    <Position X="6" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAABAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Meetup_Helpers\MeetUp.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

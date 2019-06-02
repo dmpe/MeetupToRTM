@@ -9,6 +9,7 @@ using NLog;
 using RestSharp;
 using Flurl;
 using Newtonsoft.Json;
+using Flurl.Http;
 
 namespace MeetupToRTM.MeetupHelpers
 {
@@ -44,12 +45,13 @@ namespace MeetupToRTM.MeetupHelpers
         public readonly AuthKeys keys = null;
 
         public string RTM_Web_UI { get; set; }
+        public string error_message = string.Empty;
 
         List<MeetupJSONEventResults> list_of_meetup_events = null;
         readonly List<RtmMeetupTasks> rtm_string_tasks = new List<RtmMeetupTasks>();
 
         List<string> list_meetup_venue_res = new List<string>();
-        
+
         public MeetUp()
         {
         }
@@ -72,17 +74,24 @@ namespace MeetupToRTM.MeetupHelpers
         /// <returns>URL which is called for the JSON output</returns>
         public string SetMeetupURL(string meetup_api_key)
         {
-            var my_url = "https://api.meetup.com"
-                .AppendPathSegment("self")
-                .AppendPathSegment("events")
-                .SetQueryParams(new
-                {
-                    sign,
-                    status,
-                    scroll,
-                    key = meetup_api_key
-                });
-
+            string my_url = null;
+            try
+            {
+                my_url = "https://api.meetup.com"
+                    .AppendPathSegment("self")
+                    .AppendPathSegment("events")
+                    .SetQueryParams(new
+                    {
+                        sign,
+                        status,
+                        scroll,
+                        key = meetup_api_key
+                    });
+            }
+            catch (Exception e) when (e is FlurlHttpException || e is Exception)
+            {
+                logger.Error(e);
+            }
             return my_url;
         }
 
@@ -92,30 +101,38 @@ namespace MeetupToRTM.MeetupHelpers
         /// <param name="URL">URL which is returned </param>
         /// <returns>Data (list of events) being associated with <c>MeetupJSONEventResults</c> class</returns>
         public List<MeetupJSONEventResults> GetMeetupData(string URL)
-        {           
+        {
             var client = new RestClient
             {
                 BaseUrl = new Uri(URL)
             };
             var request = new RestRequest();
 
-            IRestResponse response = client.Execute(request);
-            if (response.ErrorException != null)
-            {
-                const string message = "Error retrieving response. Check inner details for more info.";
-                logger.Error(message);
-                var RTMException = new ApplicationException(message, response.ErrorException);
-                throw RTMException;
-            }
-            var content = response.Content;
-
             try
             {
-                list_of_meetup_events = JsonConvert.DeserializeObject<List<MeetupJSONEventResults>>(content);
-            }
-            catch (JsonException ex)
+                IRestResponse response = client.Execute(request);
+                if (response.ErrorException != null)
+                {
+                    error_message = "Error retrieving response. Check inner details for more info.";
+                    logger.Error(error_message);
+                    var RTMException = new ApplicationException(error_message, response.ErrorException);
+                    throw RTMException;
+                }
+                var content = response.Content;
+
+                try
+                {
+                    list_of_meetup_events = JsonConvert.DeserializeObject<List<MeetupJSONEventResults>>(content);
+                    ValidateMeetupData(list_of_meetup_events);
+                }
+                catch (JsonException ex)
+                {
+                    logger.Error(ex, "Could not deserialize JSON Object");
+                }
+            } catch (Exception)
             {
-                logger.Error(ex, "Could not deserialize JSON Object");
+                // any other exception
+                logger.Error(error_message);
             }
 
             return list_of_meetup_events;
@@ -129,12 +146,11 @@ namespace MeetupToRTM.MeetupHelpers
         {
             if (list_meetup_event_res.Count == 0)
             {
-                string log = "Meetup: Does not contain any upcomming meetups";
-                Console.WriteLine(log);
-                logger.Error(log);
-                MainWindow.SetLoggingMessage_Other(log);
+                error_message = "Meetup: Does not contain any upcomming meetups";
+                logger.Error(error_message);
+                MainWindow.SetLoggingMessage_Other(error_message);
 
-                MessageBox.Show("No upcomming events have been found in Meetup. Thus the application cannot transfer them to RTM.", "Information Message", MessageBoxButton.OK);                
+                MessageBox.Show("No upcomming events have been found in Meetup. Thus the application cannot transfer them to RTM.", "Information Message", MessageBoxButton.OK);
             }
         }
 
@@ -147,6 +163,7 @@ namespace MeetupToRTM.MeetupHelpers
             foreach (var item in list_of_meetup_events_url_links)
             {
                 Console.WriteLine(item.Link);
+                logger.Info(item.Link);
             }
         }
 
@@ -160,7 +177,7 @@ namespace MeetupToRTM.MeetupHelpers
         {
             foreach (var item in list_meetup_results)
             {
-                string event_meetup_long = string.Concat(RTM_Web_UI, ": ", item.Id, " ", 
+                string event_meetup_long = string.Concat(RTM_Web_UI, ": ", item.Id, " ",
                     DeleteChars(item.Name), " ",
                     ConvertToEUDate(item.Local_date), " ",
                     item.Local_time, " ",
@@ -196,9 +213,9 @@ namespace MeetupToRTM.MeetupHelpers
                 }
                 catch (NullReferenceException e)
                 {
-                    string ev_loc = "Meetup: Nah,......Event/Venue location is empty at present";
-                    logger.Error(e, ev_loc, event_meetup_venue);
-                    MainWindow.SetLoggingMessage_Other(ev_loc);
+                    error_message = "Meetup: Nah,......Event/Venue location is empty at present";
+                    logger.Error(e, error_message, event_meetup_venue);
+                    MainWindow.SetLoggingMessage_Other(error_message);
                     event_meetup_venue = "Empty venue";
                 }
 
@@ -233,8 +250,6 @@ namespace MeetupToRTM.MeetupHelpers
 
             return date;
         }
+
     }
-
-
-
 }

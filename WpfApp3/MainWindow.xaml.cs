@@ -4,7 +4,8 @@ using MeetupToRTM.RememberTM_Helpers;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
+using IniParser;
+using IniParser.Model;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,6 +13,9 @@ using System.Windows.Navigation;
 
 using System.Diagnostics;
 using NLog;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace MeetupToRTM
 {
@@ -24,9 +28,10 @@ namespace MeetupToRTM
     {
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        RTM rtm = null;
         AuthKeys ak = null;
+        RTM rtm = null;
         MeetUp meetup_inst = null;
+        string[] key_ar;
 
         public static ObservableCollection<string> ListBoxData { get; set; }
         bool checkbox_value = false;
@@ -39,7 +44,37 @@ namespace MeetupToRTM
             ListBoxData = new ObservableCollection<string>() { "Used for logging..." };
 
             LoggingListBox.ItemsSource = ListBoxData;
+            key_ar = ReadConfig();
         }
+
+        /// <summary>
+        /// If file present, then read from it, otherwise leave empty -> error
+        /// </summary>
+        /// <returns>array of RTM/Meetup keys</returns>
+        public string[] ReadConfig()
+        {
+            KeyDataCollection keyCol = null;
+            string[] key_array = null;
+            try
+            {
+                // This will get the current PROJECT directory
+                string currentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                string projectDirectory = Path.Combine(currentDirectory + "\\RTM_Meetup_secrets.ini");
+                var parser = new FileIniDataParser();
+                IniData data = parser.ReadFile(projectDirectory);
+                keyCol = data["private_information"];
+            }
+            catch
+            {
+                string MeetupKey = keyCol["MeetupKey_file"] ?? null;
+                string RTMkey = keyCol["RTMkey_file"] ?? null;
+                string RTMsecret = keyCol["RTMsecret_file"] ?? null;
+                key_array = new string[] { MeetupKey, RTMkey, RTMsecret };
+                logger.Info("our keys: " + key_array[0] + " ..." + key_array[1] + " ..." + key_array[2]);
+            }
+            return key_array;
+        }
+
 
         /// <summary 
         /// This is main method for converting meetup data into RTM tasks
@@ -52,9 +87,9 @@ namespace MeetupToRTM
         {
             ak = new AuthKeys
             {
-                MyRTMkey = RTMkey.Text,
-                MyRTMsecret = RTMsecret.Text,
-                MyMeetupKey = MeetupKey.Text
+                MyRTMkey = key_ar[1] ?? RTMkey.Text,
+                MyRTMsecret = key_ar[2] ?? RTMsecret.Text,
+                MyMeetupKey = key_ar[0] ?? MeetupKey.Text
             };
 
             meetup_inst = new MeetUp(ak, RTM_Web_UI_Format.Text);
@@ -65,18 +100,17 @@ namespace MeetupToRTM
             rtm.InitiateConnection(ak);
 
             var meetup_url = meetup_inst.SetMeetupURL(ak.MyMeetupKey);
-            //Console.WriteLine("we are at meetup link: " + meetup_url);
+            logger.Info("we are at meetup link: " + meetup_url);
             SetLoggingMessage_Other("RTM: we are at meetup link: " + meetup_url);
 
             List<MeetupJSONEventResults> mu_data = meetup_inst.GetMeetupData(meetup_url);
 
-            //meetup_inst.GetSampleData(mu_data); // for testing
+            meetup_inst.GetSampleData(mu_data); // for testing
 
             var mu_event = meetup_inst.Create_RTM_Tasks_From_Events(mu_data);
             var mu_event_vanue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(mu_data);
 
             rtm.SetRTMTasks(mu_data, mu_event, mu_event_vanue, checkbox_value);
-
 
         }
 
