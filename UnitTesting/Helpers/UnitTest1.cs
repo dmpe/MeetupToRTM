@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MeetupToRTM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MeetupToRTM.Tests
 {
@@ -25,18 +19,6 @@ namespace MeetupToRTM.Tests
         {
             ak.MyMeetupKey = "16516584665";
             Assert.AreEqual(ak.MyMeetupKey, "16516584665");
-        }
-
-        [TestMethod()]
-        public void AuthKeysTest2()
-        {
-
-        }
-
-        [TestMethod()]
-        public void AuthKeysTest3()
-        {
-
         }
     }
 }
