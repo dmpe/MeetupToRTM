@@ -71,13 +71,14 @@ steps:
     feedsToUse: 'select'
 
 - task: VSBuild@1
-  displayName: Build MeetupToRTM.csproj, create exe file
+  displayName: Build MeetupToRTM.csproj, creating exe file
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 - task: VisualStudioTestPlatformInstaller@1
+  displayName: Prepare to build UnitTesting.csproj
   inputs:
     packageFeedSelector: 'nugetOrg'
     versionSelector: 'latestPreRelease'
@@ -85,8 +86,7 @@ steps:
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
-    testAssemblyVer2: '!**\obj\**
-      $(Build.SourcesDirectory)\UnitTesting\**'
+    testAssemblyVer2: '**\*test*.dll'
     searchFolder: '$(System.DefaultWorkingDirectory)'
     codeCoverageEnabled: true
 
@@ -94,7 +94,7 @@ steps:
   inputs:
     testResultsFormat: 'VSTest'
     testResultsFiles: '**/UnitTesting.xml'
-
+    searchFolder: '$(System.DefaultWorkingDirectory)'
 
 #- task: VSTest@2
 #  inputs:
