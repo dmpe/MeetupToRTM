@@ -2,11 +2,17 @@
 
 namespace MeetupToRTM.Tests
 {
+    /// <summary>
+    /// Test Class
+    /// </summary>
     [TestClass()]
     public class UnitTest1
     {
         AuthKeys ak = new AuthKeys();
 
+        /// <summary>
+        /// Test Method 1
+        /// </summary>
         [TestMethod()]
         public void AuthKeysTest()
         {
@@ -14,6 +20,9 @@ namespace MeetupToRTM.Tests
             Assert.AreEqual(ak.MyRTMkey, "16516584665");
         }
 
+        /// <summary>
+        /// Test Method 2
+        /// </summary>
         [TestMethod()]
         public void AuthKeysTest1()
         {
