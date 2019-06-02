@@ -93,7 +93,7 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
-    testResultsFiles: '**/UnitTesting.xml'
+    testResultsFiles: '**\UnitTesting.xml'
     searchFolder: '$(System.DefaultWorkingDirectory)'
 
 #- task: VSTest@2
