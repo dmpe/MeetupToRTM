@@ -119,7 +119,8 @@ steps:
   inputs:
     action: 'create'
     gitHubConnection: dmpe
-    tagSource: 'auto'
+    tagSource: 'manual'
+    tag: 'release'
     repositoryName: dmpe/MeetupToRTM
     title: "New Release: $(Build.BuildId)"
     assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
