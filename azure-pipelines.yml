@@ -107,7 +107,7 @@ steps:
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)\WpfApp3\bin\x86\Release\'
+    rootFolderOrFile: '$(Build.SourcesDirectory)\WpfApp3'
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
