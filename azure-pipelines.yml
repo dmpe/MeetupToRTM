@@ -106,8 +106,9 @@ steps:
 
 
 - task: ArchiveFiles@2
+  displayName: 'Upload final exe and related files from zip archive to GitHub'
   inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)\WpfApp3'
+    rootFolderOrFile: '$(Build.SourcesDirectory)\WpfApp3\bin'
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -126,5 +127,5 @@ steps:
     assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
     target: $(Build.SourceVersion)
     isPreRelease: true
-    isDraft: true
+    isDraft: false
   continueOnError: true
