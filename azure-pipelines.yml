@@ -104,13 +104,23 @@ steps:
 
 - task: SonarQubeAnalyze@4
 
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+    verbose: true
+
 - task: GitHubRelease@0
   displayName: 'GitHub release draft'
   inputs:
     action: 'create'
     gitHubConnection: dmpe
     repositoryName: dmpe/MeetupToRTM
-    title: "New Release"
-    assets: $(Build.ArtifactStagingDirectory)/* 
+    title: "New Release: $(Build.BuildId)"
+    assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
     isPreRelease: true
   continueOnError: true
