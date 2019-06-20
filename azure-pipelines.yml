@@ -123,7 +123,7 @@ steps:
     repositoryName: dmpe/MeetupToRTM
     title: "New Release: $(Build.BuildId)"
     assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
-    target: 'master' 
+    target: $(Build.SourceVersion)
     isPreRelease: true
     isDraft: true
   continueOnError: true
