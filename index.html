@@ -1,35 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="@dmpe | John Malc @ GitHub">
+
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 
-
-	<title>Supporting website for Meetup-to-RememberTheMilk application</title>
+	<title>Supporting website for my RememberTheMeetUp app convertor | Send Meetup.com data to RememberTheMilk TODO app.</title>
 </head>
 <body>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var currentLocation = window.location;
-			$()
+			var currentTime = new Date();
+			var year = currentTime.getFullYear();
+			$("#currentYear").append(year);
+
+			console.log(currentLocation);
+
+
 		});
 	</script>
 
 	<div class="container">
+		<header>
+			<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm justify-content-between">
+				<div class="col-4">
+					<a class="p-2 text-dark" href="index.html">Homepage</a>
+				</div>
+
+				<div class="col-4">
+					<h5 class="my-0 mr-md-auto font-weight-bold">Remember your Meetup</h5>
+				</div>
+
+				<nav class="my-2 my-md-0 mr-md-3">
+					<a class="btn btn-outline-primary p-2 text-dark" href="https://github.com/dmpe/MeetupToRTM">GitHub Project</a>
+				</nav>
+			</div>
+		</header>
+
 		<div class="row justify-content-center">
-			<div class="col">
-			  <h1>Insert code below to your application</h1>
-			  <h3 id="code"></h3>
-			</div>
-			<div class="col">
-			  Copy and paste your Meetup code to application window.
-			</div>
+			<h2>Your code: <p id="code"></p></h2>
 		</div>
+
+		<div class="row justify-content-center">
+			Copy and paste this Meetup code to application window.
+			<img class="mb-2" src="example.gif" alt="cow" width="180" height="180">
+		</div>
+
+		<footer class="pt-4 my-md-5 pt-md-5 border-top">
+			<div class="row">
+			  <div class="col-12 col-md">
+			    <img class="mb-2" src="image.png" alt="cow" width="48" height="48">
+			    <small class="d-block mb-3 text-muted" id="currentYear"></small>
+			  </div>
+			  <div class="col-6 col-md">
+			    <h5>DMPE</h5>
+			    <ul class="list-unstyled text-small">
+			      <li><a class="text-muted" href="http://dmpe.github.io/PapersAndArticles/index.html">My Papers and Articles</a></li>
+			      <li><a class="text-muted" href="https://www.linkedin.com/in/dmitrijpetrov">My LinkedIn</a></li>
+			      <li><a class="text-muted" href="https://github.com/dmpe/">My GitHub Projects</a></li>
+			    </ul>
+			  </div>
+			</div>
+		</footer>	
 	</div>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+
 
 </body>
 </html>
