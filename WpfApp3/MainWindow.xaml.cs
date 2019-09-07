@@ -13,7 +13,6 @@ using System.Windows.Navigation;
 
 using System.Diagnostics;
 using NLog;
-using System;
 using System.IO;
 using System.Reflection;
 
@@ -53,9 +52,9 @@ namespace MeetupToRTM
         /// <returns>array of RTM/Meetup keys</returns>
         public string[] ReadConfig()
         {
-            KeyDataCollection keyCol = null;
             string[] key_array = null;
             string MeetupKey;
+            string MeetupSecretKey;
             string RTMkey;
             string RTMsecret;
             try
@@ -67,19 +66,22 @@ namespace MeetupToRTM
                 if (File.Exists(projectDirectory))
                 {
                     IniData data = parser.ReadFile(projectDirectory);
-                    keyCol = data["private_information"];
+                    KeyDataCollection keyCol = data["private_information"];
                     MeetupKey = keyCol["MeetupKey_file"];
+                    MeetupSecretKey = keyCol["MeetupSecretKey_file"];
                     RTMkey = keyCol["RTMkey_file"];
                     RTMsecret = keyCol["RTMsecret_file"];
                 }
                 else
                 {
+                    MeetupSecretKey = string.Empty;
                     MeetupKey = string.Empty;
                     RTMkey = string.Empty;
                     RTMsecret = string.Empty;
                 }
-                key_array = new string[] { MeetupKey, RTMkey, RTMsecret };
-                logger.Info("our keys: " + key_array[0] + " ..." + key_array[1] + " ..." + key_array[2]);
+                key_array = new string[] { MeetupKey, MeetupSecretKey, RTMkey, RTMsecret };
+                logger.Info("our keys: " + key_array[0] + " ..." + key_array[1] + " ..." + key_array[2] + " ..." + key_array[3]);
+
             } catch(FileNotFoundException ex) 
             {
                 logger.Error(ex);
@@ -99,9 +101,10 @@ namespace MeetupToRTM
         {
             ak = new AuthKeys
             {
-                MyRTMkey = key_ar[1] ?? RTMkey.Text,
-                MyRTMsecret = key_ar[2] ?? RTMsecret.Text,
-                MyMeetupKey = key_ar[0] ?? MeetupKey.Text
+                MyRTMkey = key_ar[2] ?? RTMkey.Text,
+                MyRTMsecret = key_ar[3] ?? RTMsecret.Text,
+                MyMeetupKey = key_ar[0] ?? MeetupKey.Text,
+                MyMeetupKeySecret = key_ar[1] ?? MeetupSecretKey.Text
             };
 
             meetup_inst = new MeetUp(ak, RTM_Web_UI_Format.Text);
@@ -111,7 +114,7 @@ namespace MeetupToRTM
             SetLoggingMessage_Other("RTM: Innitiate Connection...now...");
             rtm.InitiateConnection(ak);
 
-            var meetup_url = meetup_inst.SetMeetupURL(ak.MyMeetupKey);
+            var meetup_url = meetup_inst.SetMeetupURL(ak.MyMeetupKey, ak.MyMeetupKeySecret);
             logger.Info("we are at meetup link: " + meetup_url);
             SetLoggingMessage_Other("RTM: we are at meetup link: " + meetup_url);
 
