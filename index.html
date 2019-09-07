@@ -18,14 +18,15 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			var currentLocation = window.location;
+			// ?code=123 part
+			var meetup_code_str = window.location.search;
+			var meetup_auth_code = meetup_code_str.split("=", 1)
+			$("#code").append(meetup_auth_code[1]);
+			console.log(currentLocation);
+
 			var currentTime = new Date();
 			var year = currentTime.getFullYear();
 			$("#currentYear").append(year);
-
-			console.log(currentLocation);
-
-
 		});
 	</script>
 
@@ -47,7 +48,7 @@
 		</header>
 
 		<div class="row justify-content-center">
-			<h2>Your code: <p id="code"></p></h2>
+			<h2>Your code: <h3 id="code"></h3></h2>
 		</div>
 
 		<div class="row justify-content-center">
