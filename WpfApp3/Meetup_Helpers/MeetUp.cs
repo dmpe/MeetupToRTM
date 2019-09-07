@@ -10,6 +10,7 @@ using RestSharp;
 using Flurl;
 using Newtonsoft.Json;
 using Flurl.Http;
+using MeetupToRTM.Meetup_Helpers;
 
 namespace MeetupToRTM.MeetupHelpers
 {
@@ -67,33 +68,8 @@ namespace MeetupToRTM.MeetupHelpers
             RTM_Web_UI = RTM_Web_UI_Format;
         }
 
-        /// <summary>
-        /// Creates Flurl-based URL which can access MeetUp data
-        /// </summary>
-        /// <param name="meetup_api_key">MeetUp Key provided by the user in the GUI</param>
-        /// <returns>URL which is called for the JSON output</returns>
-        public string SetMeetupURL(string meetup_api_key)
-        {
-            string my_url = null;
-            try
-            {
-                my_url = "https://api.meetup.com"
-                    .AppendPathSegment("self")
-                    .AppendPathSegment("events")
-                    .SetQueryParams(new
-                    {
-                        sign,
-                        status,
-                        scroll,
-                        key = meetup_api_key
-                    });
-            }
-            catch (Exception e) when (e is FlurlHttpException || e is Exception)
-            {
-                logger.Error(e);
-            }
-            return my_url;
-        }
+
+
 
         /// <summary>
         /// Extract meetup JSON data and store them in the list of events
@@ -152,6 +128,17 @@ namespace MeetupToRTM.MeetupHelpers
 
                 MessageBox.Show("No upcomming events have been found in Meetup. Thus the application cannot transfer them to RTM.", "Information Message", MessageBoxButton.OK);
             }
+        }
+
+        public string SetMeetupURL(string myMeetupKey, string myMeetupKeySecret)
+        {
+            MeetUp_Connect mtc = new MeetUp_Connect();
+            string url = mtc.SetMeetupFirstURL(myMeetupKey);
+            logger.Info("My Request URL has been: " + url);
+            string returnedCode = mtc.RequestAuthorization(url);
+            logger.Info("My return code has been: " + returnedCode);
+            string Meetuptoken = mtc.RequestAccessToken(myMeetupKey, myMeetupKeySecret, returnedCode);
+            return "asd";
         }
 
         /// <summary>
