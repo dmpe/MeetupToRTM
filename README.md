@@ -28,8 +28,8 @@ You will need to have 2 API keys:
  - API Key from Meetup <https://secure.meetup.com/meetup_api/key/>
  - API Keys from RTM <https://www.rememberthemilk.com/services/api/>
 
-![image](images/rtm_meetup.PNG)
-![image2](images/rtm_smartlist.PNG)
+![image](images/rtm_meetup.png)
+![image2](images/rtm_smartlist.png)
 
 # Building/Testing MeetupToRTM
 
