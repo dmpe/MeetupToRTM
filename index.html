@@ -22,7 +22,7 @@
 			var meetup_code_str = window.location.search;
 			var meetup_auth_code = meetup_code_str.split("=", 1)
 			$("#code").append(meetup_auth_code[1]);
-			console.log(currentLocation);
+			console.log(meetup_auth_code);
 
 			var currentTime = new Date();
 			var year = currentTime.getFullYear();
