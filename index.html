@@ -20,9 +20,9 @@
 		$(document).ready(function() {
 			// ?code=123 part
 			var meetup_code_str = window.location.search;
-			var meetup_auth_code = meetup_code_str.split("=", 1)
+			var meetup_auth_code = meetup_code_str.split("=")
 			$("#code").append(meetup_auth_code[1]);
-			console.log(meetup_auth_code);
+			console.log(meetup_auth_code[1]);
 
 			var currentTime = new Date();
 			var year = currentTime.getFullYear();
@@ -48,7 +48,7 @@
 		</header>
 
 		<div class="row justify-content-center">
-			<h2>Your code: <h3 id="code"></h3></h2>
+			<h2>Your code:<h2 id="code"> </h2></h2>
 		</div>
 
 		<div class="row justify-content-center">
