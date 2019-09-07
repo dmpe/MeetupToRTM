@@ -15,12 +15,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: SonarQubePrepare@4
+- task: SonarCloudPrepare@1
   inputs:
-    SonarQube: 'SonarQube Cloud io'
+    SonarCloud: 'SonarCloud'
+    organization: 'dmpe-github'
     scannerMode: 'MSBuild'
     projectKey: 'dmpe_MeetupToRTM'
-    projectName: 'MeetupToRTM'
+    projectName: 'MeetupToRTM github'
     extraProperties: |
      sonar.organization=dmpe-github
      sonar.branch.name=master
@@ -102,8 +103,7 @@ steps:
 #    configuration: '$(buildConfiguration)'
 #    codeCoverageEnabled: true
 
-- task: SonarQubeAnalyze@4
-
+- task: SonarCloudAnalyze@1
 
 - task: ArchiveFiles@2
   displayName: 'Upload final exe and related files from zip archive to GitHub'
@@ -120,12 +120,15 @@ steps:
   inputs:
     action: 'create'
     gitHubConnection: dmpe
-    tagSource: 'manual'
-    tag: 'release'
+    tagSource: 'auto'
+    tagPattern: 'release'
     repositoryName: dmpe/MeetupToRTM
-    title: "New Release: $(Build.BuildId)"
+    title: "New Release: v.$(Build.BuildId)"
     assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
     target: $(Build.SourceVersion)
     isPreRelease: true
     isDraft: false
+    compareWith: 'lastFullRelease'
   continueOnError: true
+
+
