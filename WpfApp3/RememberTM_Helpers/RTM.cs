@@ -15,16 +15,14 @@ namespace MeetupToRTM.RememberTM_Helpers
     class RTM
     {
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
-        public AuthKeys authentication = null;
+        public AuthKeys authKeys = null;
 
-        private List<MeetupJSONEventResults> mu_data = null;
-        private List<string> mu_venue = null;
-        private List<RtmMeetupTasks> mu_event = null;
-
-        private readonly Random random_number = new Random();
+        private List<MeetupJSONEvents> meetupEventData = null;
+        private List<string> meetupVenueData = null;
+        private List<RtmMeetupTasks> rtmMeetupTasksData = null;
 
         private string timeline = string.Empty;
-        private string list_id = string.Empty;
+        private string listId = string.Empty;
         private string target_rtm_meetup_list = string.Empty;
 
 
@@ -39,36 +37,37 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// RTM constructor which takes <c>AuthKeys</c> keys
         /// </summary>
         /// <see href="https://www.rememberthemilk.com/services/api/methods.rtm">RTM Methods API</see>
-        /// <param name="aka">Passing <c>AuthKeys</c> keys</param>
-        public RTM(AuthKeys aka)
+        /// <param name="authKeys">Passing <c>AuthKeys</c> keys</param>
+        public RTM(AuthKeys authKs)
         {
-            authentication = aka;
+            this.authKeys = authKs;
         }
 
         /// <summary>
         /// Take Auth keys and initiate basic RTM connection by creating or reading authtoken file
         /// </summary>
-        /// <param name="aka">Passing <c>AuthKeys</c> keys</param>
-        public void InitiateConnection(AuthKeys aka)
+        /// <param name="authKeys">Passing <c>AuthKeys</c> keys</param>
+        public void InitiateConnection(AuthKeys authKeys)
         {
-            RtmConnectionHelper.InitializeRtmConnection(aka.MyRTMkey, aka.MyRTMsecret);
-            MainWindow.SetLoggingMessage_Other("RTM: Initiate Connection using: " + aka.MyRTMkey + " and " + aka.MyRTMsecret);
+            RtmConnectionHelper.InitializeRtmConnection(authKeys.MyRTMkey, authKeys.MyRTMsecret);
+            MainWindow.SetLoggingMessage_Other("RTM: Initiate Connection using: " + authKeys.MyRTMkey + " and " + authKeys.MyRTMsecret);
 
-            string urlRTM = RtmConnectionHelper.GetAuthenticationUrl(RtmConnectionHelper.Permissions.Write);
-            MainWindow.SetLoggingMessage_Other("RTM: we are inside of InitiateConnection() method: " + urlRTM);
+            string rtmUriWithWritePerms = RtmConnectionHelper.GetAuthenticationUrl(RtmConnectionHelper.Permissions.Write);
+            MainWindow.SetLoggingMessage_Other("RTM: we are inside of InitiateConnection() method: " + rtmUriWithWritePerms);
 
-            Process.Start(urlRTM);
+            Process.Start(rtmUriWithWritePerms);
             System.Threading.Thread.Sleep(2000);
 
-            RtmApiResponse authResponse = RtmConnectionHelper.GetApiAuthToken();
+            RtmApiResponse authResponseToken = RtmConnectionHelper.GetApiAuthToken();
 
-            logger.Info("authResponse.Auth.Token: -> " + authResponse.Auth.Token);
-            MainWindow.SetLoggingMessage_Other("RTM: " + authResponse.Auth.User.FullName + " authResponse.Auth.Token: -> " + authResponse.Auth.Token);
+            logger.Info("RTM: authResponseToken: -> " + authResponseToken.Auth.Token);
+            MainWindow.SetLoggingMessage_Other("RTM: " + authResponseToken.Auth.User.FullName + 
+                " token: -> " + authResponseToken.Auth.Token);
 
             if (!File.Exists("authtoken.authtoken"))
             {
                 // if file does not exist, then create it by writing into it
-                CreateAuthFile("authtoken.authtoken", authResponse.Auth.Token);
+                CreateAuthFile("authtoken.authtoken", authResponseToken.Auth.Token);
             }
             else
             {
@@ -85,19 +84,20 @@ namespace MeetupToRTM.RememberTM_Helpers
                     }
                     catch (Exception e)
                     {
-                        string mes = "checking for the RTM token has failed. Creating new one";
+                        string mes = "RTM: checking for the RTM token has failed. Creating new one";
                         MainWindow.SetLoggingMessage_Other(mes);
                         logger.Error(mes);
                         MainWindow.SetLoggingMessage_Other(e.Message);
                     }
 
-                    CreateAuthFile("authtoken.authtoken", authResponse.Auth.Token);
+                    CreateAuthFile("authtoken.authtoken", authResponseToken.Auth.Token);
                 }
                 else
                 {
                     string file_text = File.ReadAllText(@"authtoken.authtoken");
-                    logger.Info("RTM: Our file_text: " + file_text);
-                    MainWindow.SetLoggingMessage_Other("RTM: Read from existing authtoken file: " + file_text);
+                    string msg = "RTM: Our file_text to read from: ";
+                    logger.Info(msg + file_text);
+                    MainWindow.SetLoggingMessage_Other(msg + file_text);
                     RtmConnectionHelper.SetApiAuthToken(file_text);
                 }
             }
@@ -110,9 +110,9 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// <param name="token">Token from RTM</param>
         public void CreateAuthFile(string name, string token)
         {
-            using (FileStream fs = new FileStream(name, FileMode.Create, FileAccess.ReadWrite))
+            using (var fs = new FileStream(name, FileMode.Create, FileAccess.ReadWrite))
             {
-                using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                using (var sw = new StreamWriter(fs, Encoding.UTF8))
                 {
                     sw.Write(token);
                     sw.Close();
@@ -130,21 +130,21 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// <param name="mu_venue_strings"></param>
         /// <param name="checkbox"></param>
         /// </summary>
-        public void SetRTMTasks(List<MeetupJSONEventResults> mu_data, List<RtmMeetupTasks> mu_data_strings,
+        public void SetRTMTasks(List<MeetupJSONEvents> mu_data, List<RtmMeetupTasks> mu_data_strings,
                                 List<string> mu_venue_strings, bool checkbox)
         {
             string msg = "RTM: we are creating a new set of tasks";
             MainWindow.SetLoggingMessage_Other(msg);
             logger.Info(msg);
 
-            mu_event = mu_data_strings;
-            this.mu_data = mu_data;
-            mu_venue = mu_venue_strings;
+            rtmMeetupTasksData = mu_data_strings;
+            this.meetupEventData = mu_data;
+            meetupVenueData = mu_venue_strings;
 
             int upcomming_events = mu_data.Count;
-
-            logger.Info("RTM: Number of upcomming entries: " + upcomming_events);
-            MainWindow.SetLoggingMessage_Other("\n RTM: Number of upcomming entries: " + upcomming_events);
+            string msgUpcommingEvents = "RTM: Number of upcomming entries: " + upcomming_events;
+            logger.Info(msgUpcommingEvents);
+            MainWindow.SetLoggingMessage_Other("\n" + msgUpcommingEvents);
 
             if (checkbox)
             {
@@ -172,18 +172,18 @@ namespace MeetupToRTM.RememberTM_Helpers
             {
                 try
                 {
-                    foreach (var task_str in mu_event)
+                    foreach (var task_str in rtmMeetupTasksData)
                     {
                         LogTasks(task_str.Long_Task_Description);
-                        RtmApiResponse created_task = RtmMethodHelper.AddTask(timeline, task_str.Long_Task_Description, parse: "1");
+                        var created_task = RtmMethodHelper.AddTask(timeline, task_str.Long_Task_Description, parse: "1");
 
-                        list_id = created_task.List.Id;
+                        listId = created_task.List.Id;
 
-                        string strr = "timeline_id: " + timeline + "\n" + "list_id: " + list_id + "\n";
+                        string strr = "timeline_id: " + timeline + "\n" + "listId: " + listId + "\n";
                         logger.Info(strr);
                         MainWindow.SetLoggingMessage_Other(strr);
                     }
-                    GetStoredRTMTasks(list_id, timeline);
+                    GetStoredRTMTasks(listId, timeline);
 
                 }
                 catch (Exception e)
@@ -227,7 +227,7 @@ namespace MeetupToRTM.RememberTM_Helpers
 
             //int terte = taskResponse.TaskSeriesCollection.TaskSeriesList.Count();
             //RtmApiListObject tssListIds = listResponse.ListCollection.Lists
-            //    .Where(list => Equals(list.Id, list_id))
+            //    .Where(list => Equals(list.Id, listId))
             //    .FirstOrDefault();
 
 
@@ -283,12 +283,12 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// Log information about tasks
         /// </summary>
         /// <param name="task_str"></param>
-        private void LogTasks(string task_str)
+        private void LogTasks(string taskStatus)
         {
             logger.Info("...............");
-            logger.Info(task_str);
+            logger.Info(taskStatus);
             logger.Info("...............");
-            MainWindow.SetLoggingMessage_Other(task_str);
+            MainWindow.SetLoggingMessage_Other(taskStatus);
         }
     }
 }
