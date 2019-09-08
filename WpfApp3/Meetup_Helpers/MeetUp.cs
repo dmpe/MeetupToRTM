@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Flurl.Http;
 using MeetupToRTM.Meetup_Helpers;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace MeetupToRTM.MeetupHelpers
 {
@@ -44,13 +45,15 @@ namespace MeetupToRTM.MeetupHelpers
         public static readonly string status = "upcoming";
         public static readonly string scroll = "next_upcoming";
         public static readonly bool sign = true;
+        public string data_url = string.Empty;
         public AuthKeys keys = null;
         MeetUp_Connect mtc = null;
+        JsonMeetupAuth jsmt = null;
 
         public string RTM_Web_UI { get; set; }
         string error_message = string.Empty;
 
-        List<MeetupJSONEventResults> list_of_meetup_events = null;
+        List<MeetupJSONEvents> list_of_meetup_events = null;
         readonly List<RtmMeetupTasks> rtm_string_tasks = new List<RtmMeetupTasks>();
 
         List<string> list_meetup_venue_res = new List<string>();
@@ -58,12 +61,14 @@ namespace MeetupToRTM.MeetupHelpers
         public MeetUp()
         {
             mtc = new MeetUp_Connect();
+            jsmt = new JsonMeetupAuth();
         }
 
         public MeetUp(AuthKeys aka)
         {
             keys = aka;
             mtc = new MeetUp_Connect();
+            jsmt = new JsonMeetupAuth();
         }
 
         public MeetUp(AuthKeys aka, string RTM_Web_UI_Format)
@@ -71,6 +76,7 @@ namespace MeetupToRTM.MeetupHelpers
             keys = aka;
             RTM_Web_UI = RTM_Web_UI_Format;
             mtc = new MeetUp_Connect();
+            jsmt = new JsonMeetupAuth();
         }
 
         /// <summary>
@@ -85,73 +91,84 @@ namespace MeetupToRTM.MeetupHelpers
         }
 
         /// <summary>
-        /// 
+        /// Get Access Token which is used for actual GET requests
         /// </summary>
-        /// <param name="myMeetupKey"></param>
-        /// <param name="myMeetupKeySecret"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        public string Authorize_return_Token(string token) { 
-            string bodyfortoken = mtc.RequestAccessToken(keys.MyMeetupKey, keys.MyMeetupKeySecret, token);
-            logger.Info("My return code has been: " + bodyfortoken);
-            string Meetuptoken = mtc.RequestAuthorization(bodyfortoken);
-            keys.MyMeetupToken = Meetuptoken;
-            logger.Info("auth keys now has proper token value from meetup");
-            return Meetuptoken;
+        internal async Task<JsonMeetupAuth> AuthorizeTokenAsync(string token) {
+            logger.Info(token);
+            jsmt = await mtc.RequestAuthorizationAsync(keys.MyMeetupKey, keys.MyMeetupKeySecret, token);
+            keys.MyMeetupToken = jsmt.access_token;
+            logger.Info("authURL keys now has proper token value from meetup: -> " + keys.MyMeetupToken);
+            return jsmt;
         }
 
         /// <summary>
-        /// For unit testing only
+        /// Creates Flurl-based URL which can access MeetUp data
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="secret"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public string Authorize_return_Token(string key, string secret, string token)
+        /// <returns>URL which is called for the JSON output</returns>
+        public string CreateDataURL()
         {
-            string bodyfortoken = mtc.RequestAccessToken(key, secret, token);
-            logger.Info("My return code has been: " + bodyfortoken);
-            return bodyfortoken;
+            try
+            {
+                data_url = "https://api.meetup.com"
+                    .AppendPathSegment("self")
+                    .AppendPathSegment("events")
+                    .SetQueryParams(new
+                    {
+                        sign,
+                        status,
+                        scroll,
+                    });
+            }
+            catch (Exception e) when (e is FlurlHttpException || e is null)
+            {
+                logger.Error(e);
+            }
+            return data_url;
         }
 
         /// <summary>
         /// Extract meetup JSON data and store them in the list of events
         /// </summary>
         /// <param name="URL">URL which is returned </param>
-        /// <returns>Data (list of events) being associated with <c>MeetupJSONEventResults</c> class</returns>
-        public List<MeetupJSONEventResults> GetMeetupData(string URL)
+        /// <returns>Data (list of events) being associated with <c>MeetupJSONEvents</c> class</returns>
+        public List<MeetupJSONEvents> GetMeetupData(string meetupDataURL)
         {
+            logger.Info("my token is :" + keys.MyMeetupToken + " - " + jsmt.access_token + " URL: "+ meetupDataURL);
             var client = new RestClient
             {
-                BaseUrl = new Uri(URL)
+                BaseUrl = new Uri(meetupDataURL)
             };
             var request = new RestRequest();
+            request.AddParameter("Authorization", string.Format("Bearer " + keys.MyMeetupToken), ParameterType.HttpHeader);
 
-            try
-            {
-                IRestResponse response = client.Execute(request);
-                if (response.ErrorException != null)
-                {
-                    error_message = "Error retrieving response. Check inner details for more info.";
-                    logger.Error(error_message);
-                    var RTMException = new ApplicationException(error_message, response.ErrorException);
-                    throw RTMException;
-                }
-                var content = response.Content;
+            //try
+            //{
+            //    IRestResponse response = client.Execute(request);
+            //    if (response.ErrorException != null)
+            //    {
+            //        error_message = "Error retrieving response. Check inner details for more info.";
+            //        logger.Error(error_message);
+            //        var RTMException = new ApplicationException(error_message, response.ErrorException);
+            //        throw RTMException;
+            //    }
+            //    var content = response.Content;
 
-                try
-                {
-                    list_of_meetup_events = JsonConvert.DeserializeObject<List<MeetupJSONEventResults>>(content);
-                    ValidateMeetupData(list_of_meetup_events);
-                }
-                catch (JsonException ex)
-                {
-                    logger.Error(ex, "Could not deserialize JSON Object");
-                }
-            } catch (Exception)
-            {
-                // any other exception
-                logger.Error(error_message);
-            }
+            //    try
+            //    {
+            //        list_of_meetup_events = JsonConvert.DeserializeObject<List<MeetupJSONEvents>>(content);
+            //        ValidateMeetupData(list_of_meetup_events);
+            //    }
+            //    catch (JsonException ex)
+            //    {
+            //        logger.Error(ex, "Could not deserialize JSON Object");
+            //    }
+            //} catch (Exception)
+            //{
+            //    // any other exception
+            //    logger.Error(error_message);
+            //}
 
             return list_of_meetup_events;
         }
@@ -159,8 +176,8 @@ namespace MeetupToRTM.MeetupHelpers
         /// <summary>
         /// If there are zero events, log this information to the user as well
         /// </summary>
-        /// <param name="list_meetup_event_res">List of <c>MeetupJSONEventResults</c> events</param>
-        public void ValidateMeetupData(List<MeetupJSONEventResults> list_meetup_event_res)
+        /// <param name="list_meetup_event_res">List of <c>MeetupJSONEvents</c> events</param>
+        public void ValidateMeetupData(List<MeetupJSONEvents> list_meetup_event_res)
         {
             if (list_meetup_event_res.Count == 0)
             {
@@ -176,7 +193,7 @@ namespace MeetupToRTM.MeetupHelpers
         /// Returns a sample of data, i.e. URL links
         /// </summary>
         /// <param name="list_of_meetup_events_url_links">URL event links</param>
-        public void GetSampleData(List<MeetupJSONEventResults> list_of_meetup_events_url_links)
+        public void GetSampleData(List<MeetupJSONEvents> list_of_meetup_events_url_links)
         {
             foreach (var item in list_of_meetup_events_url_links)
             {
@@ -191,7 +208,7 @@ namespace MeetupToRTM.MeetupHelpers
         /// <param name="list_meetup_results">List of events, from <c>GetMeetupData</c> method</param>
         /// <seealso cref="GetMeetupData(string URL)"/>
         /// <returns>A list of strings/events which are pushed to become RTM tasks</returns>
-        public List<RtmMeetupTasks> Create_RTM_Tasks_From_Events(List<MeetupJSONEventResults> list_meetup_results)
+        public List<RtmMeetupTasks> Create_RTM_Tasks_From_Events(List<MeetupJSONEvents> list_meetup_results)
         {
             foreach (var item in list_meetup_results)
             {
@@ -217,7 +234,7 @@ namespace MeetupToRTM.MeetupHelpers
         /// </summary>
         /// <param name="list_meetup_res"></param>
         /// <returns>Return a list of venues for events</returns>
-        public List<string> PrepareMeetupTaskList_Venue_ToString(List<MeetupJSONEventResults> list_meetup_res)
+        public List<string> PrepareMeetupTaskList_Venue_ToString(List<MeetupJSONEvents> list_meetup_res)
         {
             foreach (var item in list_meetup_res)
             {

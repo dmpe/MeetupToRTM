@@ -1,11 +1,12 @@
-﻿using MeetupToRTM.MeetupHelpers;
+﻿using MeetupToRTM.Meetup_Helpers;
+using MeetupToRTM.MeetupHelpers;
 
 namespace MeetupToRTM.MeetupJSONHelpers
 {
     /// <summary>
-    /// Create a main MeetUp JSON class that we can map our JSON to.
+    /// Create main MeetUp JSON class that we can map our JSON to.
     /// </summary>
-    public class MeetupJSONEventResults : MeetUp
+    public class MeetupJSONEvents : MeetUp
     {
         public string How_to_find_us { get; set; }
         public string Id { get; set; }
@@ -20,7 +21,7 @@ namespace MeetupToRTM.MeetupJSONHelpers
         public int UTC_offset { get; set; }
         public int Waitlist_count { get; set; }
         public int Yes_rsvp_count { get; set; }
-        public MeetupJSONVenueResults Venue { get; set; }
+        public MeetupJSONVenues Venue { get; set; }
         public string Link { get; set; }
         public string Description { get; set; }
         public string Visibility { get; set; }
@@ -31,12 +32,20 @@ namespace MeetupToRTM.MeetupJSONHelpers
     /// <summary>
     /// For Venue/Event Locations
     /// </summary>
-    public class MeetupJSONVenueResults : MeetUp
+    public class MeetupJSONVenues : MeetUp
     {
         public string Name { get; set; }
         public float Lat { get; set; }
         public float Lon { get; set; }
         public string Address_1 { get; set; }
         public string City { get; set; }
+    }
+
+    class JsonMeetupAuth : MeetUp_Connect
+    {
+        public string access_token { get; set; }
+        public string token_type { get; set; }
+        public string expires_in { get; set; }
+        public string refresh_token { get; set; }
     }
 }

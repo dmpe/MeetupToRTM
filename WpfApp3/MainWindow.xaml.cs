@@ -13,6 +13,9 @@ using NLog;
 using System.IO;
 using System.Reflection;
 using RememberTheMeetup;
+using System;
+using MeetupToRTM.MeetupJSONHelpers;
+using System.Collections.Generic;
 
 namespace MeetupToRTM
 {
@@ -97,6 +100,8 @@ namespace MeetupToRTM
         /// <param name="e"></param>
         public void Click_Button(object sender, RoutedEventArgs e)
         {
+            string rtmCon = "RTM: Innitiate Connection...now...";
+            string meetupCon = "MeetUp: Innitiate Connection...now...";
             ak = new AuthKeys
             {
                 MyRTMkey = key_ar[2] ?? RTMkey.Text,
@@ -109,28 +114,32 @@ namespace MeetupToRTM
             rtm = new RTM();
 
             // initiate RTM connection
-            SetLoggingMessage_Other("RTM: Innitiate Connection...now...");
+            SetLoggingMessage_Other(rtmCon);
             rtm.InitiateConnection(ak);
-            logger.Info("Done with RTM authentication");
+            logger.Info("Done with RTM authKeys");
 
             // initiate Meetup connection
             meetup_inst.InitiateConnection();
-            logger.Info("innitiating meetup connection");
-            SetLoggingMessage_Other("Meetup: Innitiate Connection...now...");
+            logger.Info(meetupCon);
+            SetLoggingMessage_Other(meetupCon);
 
             // open meetup dialog where you can insert code, code stored
             // https://stackoverflow.com/questions/2796470/wpf-create-a-dialog-prompt
             Dialog myDia = new Dialog();
             myDia.ShowDialog();
-            string meetup_code = ak.MyMeetupCode;
-            meetup_inst.Authorize_return_Token(meetup_code);
-            logger.Info("Done with Meetup authentication");
-            //List<MeetupJSONEventResults> mu_data = meetup_inst.GetMeetupData(meetup_url);
+            string meetupCode = myDia.return_MeetupKey;
+            Console.WriteLine("Meetup: so far correct! code: " + meetupCode);
+            _ = meetup_inst.AuthorizeTokenAsync(meetupCode);
+            logger.Info("Done with Meetup authKeys: " + objUserAuth.);
+            SetLoggingMessage_Other("Done with Meetup authKeys");
 
-            //meetup_inst.GetSampleData(mu_data); // for testing
-            //var mu_event = meetup_inst.Create_RTM_Tasks_From_Events(mu_data);
-            //var mu_event_venue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(mu_data);
-            //rtm.SetRTMTasks(mu_data, mu_event, mu_event_venue, checkbox_value);
+            string meetupDataURL = meetup_inst.CreateDataURL();
+            List<MeetupJSONEvents> meetupEventData = meetup_inst.GetMeetupData(meetupDataURL);
+
+            //meetup_inst.GetSampleData(meetupEventData); // for testing
+            //var rtmMeetupTasksData = meetup_inst.Create_RTM_Tasks_From_Events(meetupEventData);
+            //var mu_event_venue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(meetupEventData);
+            //rtm.SetRTMTasks(meetupEventData, rtmMeetupTasksData, mu_event_venue, checkbox_value);
 
         }
 

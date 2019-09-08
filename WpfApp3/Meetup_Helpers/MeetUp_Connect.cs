@@ -1,97 +1,106 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
+using MeetupToRTM.MeetupJSONHelpers;
 using Newtonsoft.Json;
 using NLog;
-using RestSharp;
 
 namespace MeetupToRTM.Meetup_Helpers
 {
-    class JsonMeetupAuth : MeetUp_Connect
-    {
-        public string access_token { get; set; }
-        public string token_type { get; set; }
-        public string expires_in { get; set; }
-        public string refresh_token { get; set; }
-    }
     class MeetUp_Connect
     {
-        string auth = "https://secure.meetup.com/oauth2/authorize";
-        string acc_token = "https://secure.meetup.com/oauth2/access";
-        string redirect_url = "https://dmpe.github.io/MeetupToRTM/"; 
-        string auth_complete_url = string.Empty;
-        string acc_token_complete_url = string.Empty;
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
+        readonly string authURL = "https://secure.meetup.com/oauth2/authorize";
+        string accessURL = "https://secure.meetup.com/oauth2/access";
+        string redirectURL = "https://dmpe.github.io/MeetupToRTM/";
+        string authCompleteURL = string.Empty;
+        string accessTokenCompleteURL = string.Empty;
         string error_message = string.Empty;
         public AuthKeys authKeys = null;
-        private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Basic constructor
+        /// </summary>
         public MeetUp_Connect()
         {
 
         }
 
         /// <summary>
-        /// Creates Flurl-based URL which can access MeetUp data
+        /// Create Flurl-based URL which can initiate Authorization flow for MeetUp data
         /// </summary>
-        /// <param name="meetup_api_key">MeetUp Key provided by the user in the GUI</param>
-        /// <returns>URL which is called for the JSON output</returns>
-        public string PrepareRequestingAuthURL(string meetup_api_key)
+        /// <param name="meetupApiKey">MeetUp Key provided by the user in the GUI</param>
+        /// <returns>URL which is called for the requesting access token</returns>
+        public string PrepareRequestingAuthURL(string meetupApiKey)
         {
             try
             {
-                auth_complete_url = auth.SetQueryParams(new
+                authCompleteURL = authURL.SetQueryParams(new
                 {
-                    client_id = meetup_api_key,
+                    client_id = meetupApiKey,
                     response_type = "code",
-                    redirect_uri = redirect_url
+                    redirect_uri = redirectURL
                 });
-            } catch (Exception e) when (e is FlurlHttpException || e is null)
+            }
+            catch (Exception e) when (e is FlurlHttpException || e is null)
             {
                 logger.Error(e);
             }
-            return auth_complete_url;
+            return authCompleteURL;
         }
 
-        public string RequestAccessToken(string meetup_api_key, string meetup_api_secret_key, string auth_code)
+        /// <summary>
+        /// Having the autherization "code", use it in the URL which returns one-time access token.
+        /// Use body from RequestAccessToken method and request JSON response
+        /// </summary>
+        /// <returns>JSON response which is mapped to the <c>JsonMeetupAuth</c> class</returns>
+        public async Task<JsonMeetupAuth> RequestAuthorizationAsync(string meetupApiKey, string meetupApiSecret, string authCode)
         {
-            string request_body = "".SetQueryParams(new
-            {
-                client_id = meetup_api_key,
-                client_secret = meetup_api_secret_key,
-                grant_type = "authorization_code",
-                redirect_uri = redirect_url,
-                code = auth_code,
-            });
-            logger.Info(request_body.Remove(0, 1));
-            return request_body.Remove(0, 1);
-        }
-
-        public string RequestAuthorization(string body_url)
-        {
-            string codeToken = string.Empty;
-            try
-            {
-                dynamic JsonString = acc_token.WithHeaders(new { ContentType = "application/x-www-form-urlencoded" }).PostUrlEncodedAsync(body_url).ReceiveJson();
-                if (JsonString.ErrorException != null)
+            var PostJSONcall = accessURL
+                .WithHeaders(new { ContentType = "application/x-www-form-urlencoded" })
+                .PostUrlEncodedAsync(new
                 {
-                    error_message = "Error retrieving response. Check inner details for more info.";
-                    logger.Error(error_message);
-                    var MeetUpConnectException = new ApplicationException(error_message, JsonString.ErrorException);
-                    throw MeetUpConnectException;
-                }
-                JsonMeetupAuth deserializedProduct = JsonConvert.DeserializeObject<JsonMeetupAuth>(JsonString);
-                codeToken = deserializedProduct.access_token;
-
-                logger.Info(codeToken);
-
-            }
-            catch
-            {
-                // any other exception
-                logger.Error(error_message);
-            }
-            
-            return codeToken;
+                    client_id = meetupApiKey,
+                    client_secret = meetupApiSecret,
+                    grant_type = "authorization_code",
+                    redirect_uri = redirectURL,
+                    code = authCode
+                });
+            return await PostJSONcall.ReceiveJson<JsonMeetupAuth>();
         }
     }
 }
+
+
+
+//    logger.Info(JsonString);
+
+//                if (JsonString.ErrorException != null)
+//                {
+//                    error_message = "Error retrieving response. Check inner details for more info.";
+//                    logger.Error(error_message);
+//                    var MeetUpConnectException = new ApplicationException(error_message, JsonString.ErrorException);
+//                    throw MeetUpConnectException;
+//                }
+//JsonMeetupAuth deserializedProduct = JsonConvert.DeserializeObject<JsonMeetupAuth>(JsonString);
+//accssToken = deserializedProduct.access_token;
+
+//                logger.Info(accssToken);
+
+//            }
+//            catch
+//            {
+//                // any other exception
+//                logger.Error(error_message);
+//            }
+
+
+
+
+
+
+
+
+
+
