@@ -95,9 +95,9 @@ namespace MeetupToRTM.MeetupHelpers
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        internal async Task<JsonMeetupAuth> AuthorizeTokenAsync(string token) {
+        internal JsonMeetupAuth AuthorizeTokenAsync(string token) {
             logger.Info(token);
-            jsmt = await mtc.RequestAuthorizationAsync(keys.MyMeetupKey, keys.MyMeetupKeySecret, token);
+            jsmt = mtc.RequestAuthorizationAsync(keys.MyMeetupKey, keys.MyMeetupKeySecret, token);
             keys.MyMeetupToken = jsmt.access_token;
             logger.Info("authURL keys now has proper token value from meetup: -> " + keys.MyMeetupToken);
             return jsmt;
@@ -143,32 +143,33 @@ namespace MeetupToRTM.MeetupHelpers
             var request = new RestRequest();
             request.AddParameter("Authorization", string.Format("Bearer " + keys.MyMeetupToken), ParameterType.HttpHeader);
 
-            //try
-            //{
-            //    IRestResponse response = client.Execute(request);
-            //    if (response.ErrorException != null)
-            //    {
-            //        error_message = "Error retrieving response. Check inner details for more info.";
-            //        logger.Error(error_message);
-            //        var RTMException = new ApplicationException(error_message, response.ErrorException);
-            //        throw RTMException;
-            //    }
-            //    var content = response.Content;
+            try
+            {
+                IRestResponse response = client.Execute(request);
+                if (response.ErrorException != null)
+                {
+                    error_message = "Error retrieving response. Check inner details for more info.";
+                    logger.Error(error_message);
+                    var RTMException = new ApplicationException(error_message, response.ErrorException);
+                    throw RTMException;
+                }
+                var content = response.Content;
 
-            //    try
-            //    {
-            //        list_of_meetup_events = JsonConvert.DeserializeObject<List<MeetupJSONEvents>>(content);
-            //        ValidateMeetupData(list_of_meetup_events);
-            //    }
-            //    catch (JsonException ex)
-            //    {
-            //        logger.Error(ex, "Could not deserialize JSON Object");
-            //    }
-            //} catch (Exception)
-            //{
-            //    // any other exception
-            //    logger.Error(error_message);
-            //}
+                try
+                {
+                    list_of_meetup_events = JsonConvert.DeserializeObject<List<MeetupJSONEvents>>(content);
+                    ValidateMeetupData(list_of_meetup_events);
+                }
+                catch (JsonException ex)
+                {
+                    logger.Error(ex, "Could not deserialize JSON Object");
+                }
+            }
+            catch (Exception)
+            {
+                // any other exception
+                logger.Error(error_message);
+            }
 
             return list_of_meetup_events;
         }

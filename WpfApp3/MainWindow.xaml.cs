@@ -125,22 +125,21 @@ namespace MeetupToRTM
 
             // open meetup dialog where you can insert code, code stored
             // https://stackoverflow.com/questions/2796470/wpf-create-a-dialog-prompt
-            Dialog myDia = new Dialog();
+            var myDia = new Dialog();
             myDia.ShowDialog();
             string meetupCode = myDia.return_MeetupKey;
             Console.WriteLine("Meetup: so far correct! code: " + meetupCode);
-            _ = meetup_inst.AuthorizeTokenAsync(meetupCode);
-            logger.Info("Done with Meetup authKeys: " + objUserAuth.);
-            SetLoggingMessage_Other("Done with Meetup authKeys");
+            var JsOb = meetup_inst.AuthorizeTokenAsync(meetupCode);
+            logger.Info("Done with Meetup authKeys: " + JsOb.access_token);
+            SetLoggingMessage_Other("Done with Meetup authKeys" + JsOb.access_token);
 
             string meetupDataURL = meetup_inst.CreateDataURL();
-            List<MeetupJSONEvents> meetupEventData = meetup_inst.GetMeetupData(meetupDataURL);
+            var meetupEventData = meetup_inst.GetMeetupData(meetupDataURL);
 
-            //meetup_inst.GetSampleData(meetupEventData); // for testing
-            //var rtmMeetupTasksData = meetup_inst.Create_RTM_Tasks_From_Events(meetupEventData);
-            //var mu_event_venue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(meetupEventData);
-            //rtm.SetRTMTasks(meetupEventData, rtmMeetupTasksData, mu_event_venue, checkbox_value);
-
+            meetup_inst.GetSampleData(meetupEventData); // for testing
+            var rtmMeetupTasksData = meetup_inst.Create_RTM_Tasks_From_Events(meetupEventData);
+            var mu_event_venue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(meetupEventData);
+            rtm.SetRTMTasks(meetupEventData, rtmMeetupTasksData, mu_event_venue, checkbox_value);
         }
 
         /// <summary>

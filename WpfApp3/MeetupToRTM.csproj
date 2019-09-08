@@ -152,7 +152,7 @@
       <HintPath>..\packages\NodaTime.2.4.6\lib\net45\NodaTime.dll</HintPath>
     </Reference>
     <Reference Include="RememberTheMilkApi">
-      <HintPath>..\..\RememberTheMilkApi-master\RememberTheMilkApi\bin\Debug\RememberTheMilkApi.dll</HintPath>
+      <HintPath>RememberTheMilkApi.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=106.6.10.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.6.10\lib\net452\RestSharp.dll</HintPath>

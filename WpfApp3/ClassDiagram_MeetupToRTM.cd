@@ -55,7 +55,7 @@
   <Class Name="MeetupToRTM.MeetupHelpers.MeetUp">
     <Position X="1.25" Y="0.5" Width="4" />
     <TypeIdentifier>
-      <HashCode>AQQAAgAgAAAISCBCQgAYAAEAAAAAAaAACAAAAAEAAAA=</HashCode>
+      <HashCode>IQQAAgAgAAAISCBCQgAYAAEAAAAAAaAACAAAAAEAAIA=</HashCode>
       <FileName>Meetup_Helpers\MeetUp.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -73,7 +73,7 @@
   <Class Name="MeetupToRTM.Meetup_Helpers.MeetUp_Connect">
     <Position X="9.5" Y="5.75" Width="3" />
     <TypeIdentifier>
-      <HashCode>AABAAIAAAIAAAAACABAAIAEAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AABAAIAAAIAAAgACABAAIAEAgAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Meetup_Helpers\MeetUp_Connect.cs</FileName>
     </TypeIdentifier>
   </Class>
