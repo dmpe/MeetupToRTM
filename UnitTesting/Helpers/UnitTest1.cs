@@ -14,7 +14,7 @@ namespace MeetupToRTM.Tests
         /// Test Method 1
         /// </summary>
         [TestMethod()]
-        public void AuthKeysTest()
+        public void testingRTM_key()
         {
             ak.MyRTMkey = "16516584665";
             Assert.AreEqual(ak.MyRTMkey, "16516584665");
@@ -24,10 +24,14 @@ namespace MeetupToRTM.Tests
         /// Test Method 2
         /// </summary>
         [TestMethod()]
-        public void AuthKeysTest1()
+        public void testingMeetup_key()
         {
             ak.MyMeetupKey = "16516584665";
             Assert.AreEqual(ak.MyMeetupKey, "16516584665");
         }
     }
 }
+
+
+
+

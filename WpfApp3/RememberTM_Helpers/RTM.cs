@@ -1,29 +1,26 @@
-﻿using MeetupToRTM.MeetupHelpers;
-using MeetupToRTM.MeetupJSONHelpers;
-using NLog;
-using RememberTheMilkApi.Helpers;
-using RememberTheMilkApi.Objects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MeetupToRTM.MeetupHelpers;
+using MeetupToRTM.MeetupJSONHelpers;
+using NLog;
+using RememberTheMilkApi.Helpers;
+using RememberTheMilkApi.Objects;
 
 namespace MeetupToRTM.RememberTM_Helpers
 {
     class RTM
     {
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
-
         public AuthKeys authentication = null;
-        public MeetUp meetup_inst = null;
 
         private List<MeetupJSONEventResults> mu_data = null;
         private List<string> mu_venue = null;
         private List<RtmMeetupTasks> mu_event = null;
 
-        private readonly string random_n;
         private readonly Random random_number = new Random();
 
         private string timeline = string.Empty;
@@ -36,7 +33,6 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// </summary>
         public RTM()
         {
-            random_n = random_number.Next().ToString();
         }
 
         /// <summary>
@@ -47,8 +43,6 @@ namespace MeetupToRTM.RememberTM_Helpers
         public RTM(AuthKeys aka)
         {
             authentication = aka;
-            meetup_inst = new MeetUp(aka);
-            random_n = random_number.Next().ToString();
         }
 
         /// <summary>

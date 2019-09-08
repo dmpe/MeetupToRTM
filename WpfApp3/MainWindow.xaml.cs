@@ -1,8 +1,5 @@
 ﻿using MeetupToRTM.MeetupHelpers;
-using MeetupToRTM.MeetupJSONHelpers;
 using MeetupToRTM.RememberTM_Helpers;
-
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using IniParser;
 using IniParser.Model;
@@ -15,6 +12,7 @@ using System.Diagnostics;
 using NLog;
 using System.IO;
 using System.Reflection;
+using RememberTheMeetup;
 
 namespace MeetupToRTM
 {
@@ -108,24 +106,31 @@ namespace MeetupToRTM
             };
 
             meetup_inst = new MeetUp(ak, RTM_Web_UI_Format.Text);
-            rtm = new RTM(ak);
+            rtm = new RTM();
 
-            // initiate connection
+            // initiate RTM connection
             SetLoggingMessage_Other("RTM: Innitiate Connection...now...");
             rtm.InitiateConnection(ak);
+            logger.Info("Done with RTM authentication");
 
-            var meetup_url = meetup_inst.SetMeetupURL(ak.MyMeetupKey, ak.MyMeetupKeySecret);
-            logger.Info("we are at meetup link: " + meetup_url);
-            SetLoggingMessage_Other("RTM: we are at meetup link: " + meetup_url);
+            // initiate Meetup connection
+            meetup_inst.InitiateConnection();
+            logger.Info("innitiating meetup connection");
+            SetLoggingMessage_Other("Meetup: Innitiate Connection...now...");
 
-            List<MeetupJSONEventResults> mu_data = meetup_inst.GetMeetupData(meetup_url);
+            // open meetup dialog where you can insert code, code stored
+            // https://stackoverflow.com/questions/2796470/wpf-create-a-dialog-prompt
+            Dialog myDia = new Dialog();
+            myDia.ShowDialog();
+            string meetup_code = ak.MyMeetupCode;
+            meetup_inst.Authorize_return_Token(meetup_code);
+            logger.Info("Done with Meetup authentication");
+            //List<MeetupJSONEventResults> mu_data = meetup_inst.GetMeetupData(meetup_url);
 
-            meetup_inst.GetSampleData(mu_data); // for testing
-
-            var mu_event = meetup_inst.Create_RTM_Tasks_From_Events(mu_data);
-            var mu_event_vanue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(mu_data);
-
-            rtm.SetRTMTasks(mu_data, mu_event, mu_event_vanue, checkbox_value);
+            //meetup_inst.GetSampleData(mu_data); // for testing
+            //var mu_event = meetup_inst.Create_RTM_Tasks_From_Events(mu_data);
+            //var mu_event_venue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(mu_data);
+            //rtm.SetRTMTasks(mu_data, mu_event, mu_event_venue, checkbox_value);
 
         }
 

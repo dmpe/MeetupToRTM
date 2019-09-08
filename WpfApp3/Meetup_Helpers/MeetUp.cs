@@ -11,6 +11,7 @@ using Flurl;
 using Newtonsoft.Json;
 using Flurl.Http;
 using MeetupToRTM.Meetup_Helpers;
+using System.Diagnostics;
 
 namespace MeetupToRTM.MeetupHelpers
 {
@@ -43,10 +44,11 @@ namespace MeetupToRTM.MeetupHelpers
         public static readonly string status = "upcoming";
         public static readonly string scroll = "next_upcoming";
         public static readonly bool sign = true;
-        public readonly AuthKeys keys = null;
+        public AuthKeys keys = null;
+        MeetUp_Connect mtc = null;
 
         public string RTM_Web_UI { get; set; }
-        public string error_message = string.Empty;
+        string error_message = string.Empty;
 
         List<MeetupJSONEventResults> list_of_meetup_events = null;
         readonly List<RtmMeetupTasks> rtm_string_tasks = new List<RtmMeetupTasks>();
@@ -55,21 +57,61 @@ namespace MeetupToRTM.MeetupHelpers
 
         public MeetUp()
         {
+            mtc = new MeetUp_Connect();
         }
 
         public MeetUp(AuthKeys aka)
         {
             keys = aka;
+            mtc = new MeetUp_Connect();
         }
 
         public MeetUp(AuthKeys aka, string RTM_Web_UI_Format)
         {
             keys = aka;
             RTM_Web_UI = RTM_Web_UI_Format;
+            mtc = new MeetUp_Connect();
         }
 
+        /// <summary>
+        /// Open Meetup Autenthication - step of login
+        /// </summary>
+        public void InitiateConnection()
+        {
+            string auth_url = mtc.PrepareRequestingAuthURL(keys.MyMeetupKey);
+            logger.Info("My Request URL has been: " + auth_url);
+            Process.Start(auth_url);
+            System.Threading.Thread.Sleep(2000);
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="myMeetupKey"></param>
+        /// <param name="myMeetupKeySecret"></param>
+        /// <returns></returns>
+        public string Authorize_return_Token(string token) { 
+            string bodyfortoken = mtc.RequestAccessToken(keys.MyMeetupKey, keys.MyMeetupKeySecret, token);
+            logger.Info("My return code has been: " + bodyfortoken);
+            string Meetuptoken = mtc.RequestAuthorization(bodyfortoken);
+            keys.MyMeetupToken = Meetuptoken;
+            logger.Info("auth keys now has proper token value from meetup");
+            return Meetuptoken;
+        }
 
+        /// <summary>
+        /// For unit testing only
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="secret"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public string Authorize_return_Token(string key, string secret, string token)
+        {
+            string bodyfortoken = mtc.RequestAccessToken(key, secret, token);
+            logger.Info("My return code has been: " + bodyfortoken);
+            return bodyfortoken;
+        }
 
         /// <summary>
         /// Extract meetup JSON data and store them in the list of events
@@ -128,17 +170,6 @@ namespace MeetupToRTM.MeetupHelpers
 
                 MessageBox.Show("No upcomming events have been found in Meetup. Thus the application cannot transfer them to RTM.", "Information Message", MessageBoxButton.OK);
             }
-        }
-
-        public string SetMeetupURL(string myMeetupKey, string myMeetupKeySecret)
-        {
-            MeetUp_Connect mtc = new MeetUp_Connect();
-            string url = mtc.SetMeetupFirstURL(myMeetupKey);
-            logger.Info("My Request URL has been: " + url);
-            string returnedCode = mtc.RequestAuthorization(url);
-            logger.Info("My return code has been: " + returnedCode);
-            string Meetuptoken = mtc.RequestAccessToken(myMeetupKey, myMeetupKeySecret, returnedCode);
-            return "asd";
         }
 
         /// <summary>
