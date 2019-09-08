@@ -51,8 +51,8 @@ steps:
   displayName: Building RememberTheMilkApi solution, a submodule
   inputs:
     solution: '$(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    platform: $(buildPlatform)
+    configuration: $(buildConfiguration)
     maximumCpuCount: true
     msbuildArchitecture: 'x64'
 
