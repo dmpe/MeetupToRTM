@@ -18,7 +18,7 @@
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MeetupToRTM.MeetupJSONHelpers.MeetupJSONEventResults">
+  <Class Name="MeetupToRTM.MeetupJSONHelpers.MeetupJSONEvents">
     <Position X="0.5" Y="6.5" Width="2" />
     <TypeIdentifier>
       <HashCode>IEAGAAAEAIAiACAAAAAAAAQACAAAAAAAQAAIUAAQAAA=</HashCode>
@@ -28,8 +28,8 @@
       <Property Name="Venue" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="MeetupToRTM.MeetupJSONHelpers.MeetupJSONVenueResults">
-    <Position X="5" Y="7" Width="2" />
+  <Class Name="MeetupToRTM.MeetupJSONHelpers.MeetupJSONVenues">
+    <Position X="3.75" Y="6.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAIAAAAAAQQAAgAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Meetup_Helpers\MeetUp_Classes.cs</FileName>
@@ -38,11 +38,11 @@
   <Class Name="MeetupToRTM.RememberTM_Helpers.RTM">
     <Position X="9.5" Y="0.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>IAAAEAQhAKAAIAACAAAAAAAAAAIAAQAAYBgEAAAAQAA=</HashCode>
+      <HashCode>AAAAEAAgAKAAIAACAAQAIAAAAAIAAQgAQAgEAAAAAAg=</HashCode>
       <FileName>RememberTM_Helpers\RTM.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="authentication" />
+      <Field Name="authKeys" />
     </ShowAsAssociation>
   </Class>
   <Class Name="MeetupToRTM.MeetupHelpers.RtmMeetupTasks">
@@ -55,7 +55,7 @@
   <Class Name="MeetupToRTM.MeetupHelpers.MeetUp">
     <Position X="1.25" Y="0.5" Width="4" />
     <TypeIdentifier>
-      <HashCode>AQQAAgAgAAAIQCBCQgAYAAEAAAAAgSAACAAAAAEAAAA=</HashCode>
+      <HashCode>AQQAAgAgAAAISCBCQgAYAAEAAAAAAaAACAAAAAEAAAA=</HashCode>
       <FileName>Meetup_Helpers\MeetUp.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -65,23 +65,23 @@
   <Class Name="RememberTheMeetup.Dialog">
     <Position X="13.25" Y="6" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAIAAAAAAAAAEAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAgAAAAEAAAAAAAAAAAA=</HashCode>
       <FileName>Dialog.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MeetupToRTM.Meetup_Helpers.JsonMeetupAuth">
-    <Position X="7.5" Y="7" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAQAA=</HashCode>
-      <FileName>Meetup_Helpers\MeetUp_Connect.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="MeetupToRTM.Meetup_Helpers.MeetUp_Connect">
     <Position X="9.5" Y="5.75" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAACCAAAABEgEAAAAAACEAAAIAAAAAA=</HashCode>
+      <HashCode>AABAAIAAAIAAAAACABAAIAEAgAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Meetup_Helpers\MeetUp_Connect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeetupToRTM.MeetupJSONHelpers.JsonMeetupAuth">
+    <Position X="6.25" Y="6.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAQAA=</HashCode>
+      <FileName>Meetup_Helpers\MeetUp_Classes.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

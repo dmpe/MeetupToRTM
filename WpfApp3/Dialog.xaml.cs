@@ -9,7 +9,8 @@ namespace RememberTheMeetup
     /// </summary>
     public partial class Dialog : Window
     {
-        public AuthKeys keys = null;
+        public string return_MeetupKey { get; set; }
+
         public Dialog()
         {
             InitializeComponent();
@@ -20,7 +21,7 @@ namespace RememberTheMeetup
             if (!string.IsNullOrEmpty(MeetupCode.Text))
             {
                 string strUserName = MeetupCode.Text;
-                
+                return_MeetupKey = strUserName;
                 this.Close();
             }
             else

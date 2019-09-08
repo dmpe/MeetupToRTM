@@ -36,6 +36,6 @@
         <Button Name="btnCancel" Click="btnCancel_Click"  Width="100"  ToolTip="Resource name: MaterialDesignRaisedAccentButton" Margin="39,0.2,37,31.8" Grid.Row="1" Grid.Column="1">
             Exit
         </Button>
-        <TextBox x:Name="MeetupCode" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="38,17,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="287" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="MeetupCode" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="38,17,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="287" HorizontalContentAlignment="Center" MaxLines="1" AutomationProperties.IsRequiredForForm="True"/>
     </Grid>
 </Window>
