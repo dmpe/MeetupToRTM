@@ -7,7 +7,7 @@ trigger:
 - master
 
 strategy:
-  maxParallel: 4
+  maxParallel: 0
   matrix:
     debug:
       _buildConfiguration: 'debug'
@@ -62,7 +62,7 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Files to RTM lib of the $(Build.SourcesDirectory) where MeetupToRTM.csproj loads it'
   inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\Release\'
+    SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\$(buildConfiguration)\'
     Contents: 'RememberTheMilkApi.dll'
     TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\'
     CleanTargetFolder: false
