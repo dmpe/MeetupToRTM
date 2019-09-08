@@ -8,11 +8,17 @@ trigger:
 
 pool:
   vmImage: 'windows-2019'
+  strategy:
+    maxParallel: 4
+    matrix:
+      debug:
+        buildConfiguration: 'debug'
+      release:
+        buildConfiguration: 'release'
 
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
 
 steps:
 - task: SonarCloudPrepare@1
