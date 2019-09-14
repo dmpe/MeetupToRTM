@@ -6,22 +6,24 @@
 trigger:
 - master
 
-jobs:
-- job: A
-  strategy:
-    maxParallel: 0
-    matrix:
-      # debug:
-      #   _buildConfiguration: 'debug'
-      release:
-        _buildConfiguration: 'release'
-  pool:
-    vmImage: 'windows-2019'
-  variables:
+variables:
     solution: '**/*.sln'
     buildPlatform: 'Any CPU'
     buildConfiguration: 'debug'
-  steps:
+
+pool:
+  vmImage: 'windows-2019'
+
+  # strategy:
+  #   maxParallel: 0
+  #   matrix:
+  #     # debug:
+  #     #   _buildConfiguration: 'debug'
+  #     release:
+  #       _buildConfiguration: 'release'
+
+
+steps:
   - task: NuGetToolInstaller@1
 
   - checkout: self
@@ -32,16 +34,16 @@ jobs:
     inputs:
       SonarQube: 'SonarQube Cloud io'
       scannerMode: 'MSBuild'
-      projectKey: 'dmpe_MeetupToRTM'
+      projectKey: 'MeetupToRTM'
       projectName: 'MeetupToRTM'
       extraProperties: 'sonar.organization=dmpe-github'
     continueOnError: true
     condition: succeededOrFailed() 
 
-  - task: NugetRestore@2
+  - task: NuGetCommand@2
     displayName: Restore nuget packages for RememberTheMilkApi.sln
     inputs: 
-      command: restore
+      command: 'restore'
       solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
       feedsToUse: 'select'
 
@@ -68,10 +70,10 @@ jobs:
   #    dir $(Build.ArtifactStagingDirectory) /s
   #    dir $(Build.SourcesDirectory) /s
 
-  - task: NugetRestore@2
+  - task: NuGetCommand@2
     displayName: Restore nuget MeetupToRTM.csproj
     inputs: 
-      command: restore
+      command: 'restore'
       solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
       feedsToUse: 'select'
 
