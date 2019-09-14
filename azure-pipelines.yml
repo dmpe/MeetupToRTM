@@ -20,7 +20,7 @@ jobs:
   variables:
     solution: '**/*.sln'
     buildPlatform: 'Any CPU'
-    buildConfiguration: '$(_buildConfiguration)'
+    buildConfiguration: 'debug'
   steps:
   - task: NuGetToolInstaller@1
 
@@ -40,7 +40,6 @@ jobs:
         sonar.branch.name=master
     continueOnError: true
     condition: succeededOrFailed() 
-
   - task: NugetRestore@2
     displayName: Restore nuget packages for RememberTheMilkApi.sln
     inputs: 
@@ -109,7 +108,8 @@ jobs:
   #    platform: '$(buildPlatform)'
   #    configuration: '$(buildConfiguration)'
   #    codeCoverageEnabled: true
-
+- task: SonarCloudAnalyze@1
+  
   - task: ArchiveFiles@2
     displayName: 'Upload final exe and related files from zip archive to GitHub'
     inputs:
@@ -136,5 +136,5 @@ jobs:
       compareWith: 'lastFullRelease'
     continueOnError: true
 
-  - task: SonarCloudAnalyze@1
+
 
