@@ -30,16 +30,6 @@ steps:
     submodules: true
     displayName: Download submodules
 
-  - task: SonarQubePrepare@4
-    inputs:
-      SonarQube: 'SonarQube Cloud io'
-      scannerMode: 'MSBuild'
-      projectKey: 'MeetupToRTM'
-      projectName: 'MeetupToRTM'
-      extraProperties: 'sonar.organization=dmpe-github'
-    continueOnError: true
-    condition: succeededOrFailed() 
-
   - task: NuGetCommand@2
     displayName: Restore nuget packages for RememberTheMilkApi.sln
     inputs: 
@@ -108,7 +98,17 @@ steps:
   #    platform: '$(buildPlatform)'
   #    configuration: '$(buildConfiguration)'
   #    codeCoverageEnabled: true
-  
+
+  - task: SonarQubePrepare@4
+    inputs:
+      SonarQube: 'SonarQube Cloud io'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'MeetupToRTM'
+      cliProjectName: 'MeetupToRTM'
+      cliSources: '.'
+      extraProperties: 'sonar.organization=dmpe-github'
+
   - task: SonarQubeAnalyze@4
 
   - task: ArchiveFiles@2
