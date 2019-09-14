@@ -134,7 +134,7 @@ steps:
       title: 'New Release: v.$(Build.BuildId)'
       assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
       isPreRelease: true
-      compareWith: 'lastFullRelease'
+      compareWith: 'lastReleaseByTag'
     continueOnError: true
 
 
