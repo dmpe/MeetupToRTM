@@ -7,9 +7,9 @@ trigger:
 - master
 
 variables:
-    solution: '**/*.sln'
-    buildPlatform: 'Any CPU'
-    buildConfiguration: 'debug'
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'debug'
 
 pool:
   vmImage: 'windows-2019'
@@ -90,8 +90,8 @@ steps:
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'VSTest'
-      testResultsFiles: '**\UnitTesting.xml'
-      searchFolder: '$(System.DefaultWorkingDirectory)'
+      testResultsFiles: '**/*.trx'
+      mergeTestResults: true
 
   #- task: VSTest@2
   #  inputs:
@@ -107,7 +107,9 @@ steps:
       cliProjectKey: 'MeetupToRTM'
       cliProjectName: 'MeetupToRTM'
       cliSources: '.'
-      extraProperties: 'sonar.organization=dmpe-github'
+      extraProperties: |
+        sonar.organization=dmpe-github
+        sonar.cs.vstest.reportsPaths=d:/a/1/s/TestResults/TestResults/TestResult.trx
 
   - task: SonarQubeAnalyze@4
 
