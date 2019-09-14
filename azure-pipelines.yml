@@ -9,7 +9,7 @@ trigger:
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'debug'
+  buildConfiguration: 'Release'
 
 pool:
   vmImage: 'windows-2019'
@@ -30,12 +30,11 @@ steps:
       SonarCloud: 'SonarCloud'
       organization: 'dmpe-github'
       scannerMode: 'MSBuild'
-      projectKey: 'RememberYourMeeting'
-      projectName: 'RememberYourMeeting'
+      projectKey: 'dmpe_MeetupToRTM'
+      projectName: 'MeetupToRTM'
       extraProperties: |
         sonar.organization=dmpe-github
         sonar.cs.vstest.reportsPaths=..\TestResults\*.trx
-
   - checkout: self
     submodules: true
     displayName: Download submodules
@@ -88,7 +87,7 @@ steps:
     displayName: Prepare to build UnitTesting.csproj
     inputs:
       packageFeedSelector: 'nugetOrg'
-      versionSelector: 'latestPreRelease'
+      versionSelector: 'latestStable'
 
   - task: VSTest@2
     inputs:
