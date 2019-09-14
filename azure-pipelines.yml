@@ -23,19 +23,20 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: '$(_buildConfiguration)'
+
 steps:
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'SonarCloud'
-    organization: 'dmpe-github'
-    scannerMode: 'MSBuild'
-    projectKey: 'dmpe_MeetupToRTM'
-    projectName: 'MeetupToRTM github'
-    extraProperties: |
-     sonar.organization=dmpe-github
-     sonar.branch.name=master
-  continueOnError: true
-  condition: succeededOrFailed() 
+# - task: SonarCloudPrepare@1
+#   inputs:
+#     SonarCloud: 'SonarCloud'
+#     organization: 'dmpe-github'
+#     scannerMode: 'MSBuild'
+#     projectKey: 'dmpe_MeetupToRTM'
+#     projectName: 'MeetupToRTM github'
+#     extraProperties: |
+#      sonar.organization=dmpe-github
+#      sonar.branch.name=master
+#   continueOnError: true
+#   condition: succeededOrFailed() 
 
 - task: NuGetToolInstaller@1
 
@@ -112,8 +113,6 @@ steps:
 #    configuration: '$(buildConfiguration)'
 #    codeCoverageEnabled: true
 
-- task: SonarCloudAnalyze@1
-
 - task: ArchiveFiles@2
   displayName: 'Upload final exe and related files from zip archive to GitHub'
   inputs:
@@ -141,3 +140,23 @@ steps:
   continueOnError: true
 
 
+jobs:
+- job: sonarqube
+  variables:
+    solution: '**/*.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'release'
+  steps:
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'SonarCloud'
+      organization: 'dmpe-github'
+      scannerMode: 'MSBuild'
+      projectKey: 'dmpe_MeetupToRTM'
+      projectName: 'MeetupToRTM github'
+      extraProperties: |
+        sonar.organization=dmpe-github
+        sonar.branch.name=master
+    continueOnError: true
+    condition: succeededOrFailed() 
+  - task: SonarCloudAnalyze@1
