@@ -14,18 +14,14 @@ strategy:
     release:
       _buildConfiguration: 'release'
 
-
-pool:
-  vmImage: 'windows-2019'
-
-
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: '$(_buildConfiguration)'
-
 jobs:
 - job: A
+  pool:
+    vmImage: 'windows-2019'
+  variables:
+    solution: '**/*.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: '$(_buildConfiguration)'
   steps:
 # - task: SonarCloudPrepare@1
 #   inputs:
@@ -143,6 +139,8 @@ jobs:
 
 
 - job: B
+  pool:
+    vmImage: 'windows-2019'
   dependsOn: A
   variables:
     solution: '**/*.sln'
