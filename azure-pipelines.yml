@@ -96,25 +96,18 @@ steps:
       platform: '$(buildPlatform)'
       buildConfiguration: '$(buildConfiguration)'
 
-  #- task: VSTest@2
-  #  inputs:
-  #    platform: '$(buildPlatform)'
-  #    configuration: '$(buildConfiguration)'
-  #    codeCoverageEnabled: true
-
-  - task: SonarQubePrepare@4
+  - task: SonarCloudPrepare@1
     inputs:
-      SonarQube: 'SonarQube Cloud io'
-      scannerMode: 'CLI'
-      configMode: 'manual'
-      cliProjectKey: 'MeetupToRTM'
-      cliProjectName: 'MeetupToRTM'
-      cliSources: '.'
+      SonarCloud: 'SonarCloud'
+      organization: 'dmpe-github'
+      scannerMode: 'MSBuild'
+      projectKey: 'RememberYourMeeting'
+      projectName: 'RememberYourMeeting'
       extraProperties: |
         sonar.organization=dmpe-github
-        sonar.cs.vstest.reportsPaths=d:\a\1\s\TestResults\*.trx
+        sonar.cs.vstest.reportsPaths=..\TestResults\*.trx
 
-  - task: SonarQubeAnalyze@4
+  - task: SonarCloudAnalyze@1
 
   - task: ArchiveFiles@2
     displayName: 'Upload final exe and related files from zip archive to GitHub'
