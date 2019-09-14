@@ -4,10 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesignConverters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"             
         xmlns:local="clr-namespace:MeetupToRTM"
         mc:Ignorable="d"
         Title="Fetch Meetup data and create Remember The Milk tasks" WindowStartupLocation="CenterScreen" ScrollViewer.CanContentScroll="True" SizeToContent="WidthAndHeight" Width="1083" MinWidth="1079" Icon="static/iconfinder_milking-maid_1518579.ico" MinHeight="305" Height="441" ResizeMode="NoResize">
-    <Grid Margin="0,0,477,0" Grid.IsSharedSizeScope="True">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Margin="0,0,477,0" Grid.IsSharedSizeScope="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="594*"/>
             <ColumnDefinition/>
@@ -27,7 +29,7 @@
         <Border x:Name="Border" BorderBrush="#FFD41B1B" BorderThickness="1" Grid.Column="1" HorizontalAlignment="Left" Height="400" Margin="22,10,-471,0" VerticalAlignment="Top" Width="450">
             <ListBox x:Name="LoggingListBox" Margin="5,5,4,9" ItemsSource="{Binding ListBoxData}" KeyDown="CopyToClipBoard" SelectionMode="Multiple"/>
         </Border>
-        <CheckBox x:Name="CheckForExisitingRTMTasksFromThisApplication" Content="Add even if there would be duplicates" HorizontalAlignment="Left" Margin="195,120,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Checked="CheckForExisitingRTMTasks_Checked" Unchecked="CheckForExisitingRTMTasks_UnChecked" Height="25" Width="290" FontSize="16">
+        <CheckBox x:Name="CheckForExisitingRTMTasksFromThisApplication" Content="Add even if there would be duplicates" HorizontalAlignment="Left" Margin="195,120,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Checked="CheckForExisitingRTMTasks_Checked" Unchecked="CheckForExisitingRTMTasks_UnChecked" Height="25" Width="290" FontSize="16" IsChecked="True">
             <CheckBox.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="1" ScaleX="1"/>
@@ -43,4 +45,6 @@
         <TextBox x:Name="MeetupSecretKey" HorizontalAlignment="Left" Height="25" Margin="260,190,0,0" TextWrapping="Wrap" Text="{Binding Text, Mode=OneWayToSource, ValidatesOnNotifyDataErrors=False}" VerticalAlignment="Top" Width="220"/>
 
     </Grid>
+    </ScrollViewer>
+
 </Window>

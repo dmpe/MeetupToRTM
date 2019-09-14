@@ -39,7 +39,7 @@
     }
 
     /// <summary>
-    /// Meetup return API in following JSON format
+    /// Meetup return API in the following JSON format
     /// </summary>
     class JsonMeetupAuth : MeetUp_Connect
     {

@@ -12,6 +12,7 @@ using System.Reflection;
 using RememberTheMeetup;
 using System;
 using RememberTheMeetup.MeetUp;
+using RememberTheMeetup.RTM;
 
 namespace MeetupToRTM
 {
@@ -25,17 +26,17 @@ namespace MeetupToRTM
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         AuthKeys ak = null;
-        RTM.RTM rtm = null;
+        RTM rtm = null;
         MeetUp meetup_inst = null;
         string[] key_ar;
 
-        public static ObservableCollection<string> ListBoxData { get; set; }
+        private static ObservableCollection<string> ListBoxData;
         bool checkbox_value = false;
 
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = this;
+            DataContext = this;
 
             ListBoxData = new ObservableCollection<string>() { "Used for logging..." };
 
@@ -79,7 +80,8 @@ namespace MeetupToRTM
                 key_array = new string[] { MeetupKey, MeetupSecretKey, RTMkey, RTMsecret };
                 logger.Info("our keys: " + key_array[0] + " ..." + key_array[1] + " ..." + key_array[2] + " ..." + key_array[3]);
 
-            } catch(FileNotFoundException ex) 
+            }
+            catch (FileNotFoundException ex)
             {
                 logger.Error(ex);
             }
@@ -107,7 +109,7 @@ namespace MeetupToRTM
             };
 
             meetup_inst = new MeetUp(ak, RTM_Web_UI_Format.Text);
-            rtm = new RTM.RTM();
+            rtm = new RTM();
 
             // initiate RTM connection
             SetLoggingMessage_Other(rtmCon);
@@ -175,7 +177,10 @@ namespace MeetupToRTM
         private void Handle_Checkbox(CheckBox checkBox)
         {
             checkbox_value = CheckForExisitingRTMTasksFromThisApplication.IsChecked.Value;
-            ListBoxData.Add("Change in the CheckBox value:   " + checkbox_value);
+            if (checkbox_value != true)
+            {
+                ListBoxData.Add("Your change in the CheckBox value has no impact, yet: " + checkbox_value);
+            }
         }
 
         /// <summary>

@@ -8,17 +8,20 @@
  
 # MeetupToRTM: C# .NetFramework 4.7 Desktop Application
 
-## Objective:
- - Export your upcoming Meetup.com events into Remember The Milk tasks.
-   - Thus replacing a paid functionality available through [IFTTT](https://www.rememberthemilk.com/services/ifttt/)
+Use this app to export your upcoming Meetup.com events into Remember The Milk tasks.
+And therefore, avoid paying for such functionality through [IFTTT](https://www.rememberthemilk.com/services/ifttt/) :yay:.
 
-### Features/TODO:
- - Fetches your [meetup events](https://www.meetup.com/meetup_api/docs/self/events/) and converts them to tasks. 
+## Features/TODO:
+
+ - Fetches your [meetup events](https://www.meetup.com/meetup_api/docs/self/events/) and convert them to tasks. 
    The format used, by default and which can be also adjusted, is <ID-MeetupRTM: _meetupEventID_ _MeetupName_>. 
  
- - [ ] Unfortunately, the app will not recognize already added and hence will add them again, thus forcing you to de-clutter your list for avoiding duplicates.
+ - 100% privacy - app has no tracking, just write a log to your PC.
 
-#### Requirenments to making it work:
+ - [ ] Unfortunately, it will not recognize already added tasks and hence will add them again. 
+ You will need to de-clutter your list for avoiding duplicates.
+
+### Requirenments to making it work:
 
 You will need to have 2 API keys:
 
@@ -28,7 +31,7 @@ You will need to have 2 API keys:
 ![image](images/rtm_meetup.png)
 ![image2](images/rtm_smartlist.png)
 
-# Building/Testing MeetupToRTM
+## Building/Testing MeetupToRTM
 
 I use Azure Pipelines for CI/CD. See here <https://johnmalc.visualstudio.com/MeetupToRTM/_build/>
 
@@ -41,7 +44,8 @@ git submodule update --remote
 
 ## How to start
 
-Download from release page a `zip` archive and unpack it somewhere. Double click on exe file -> app should start automatically.
+Download from release page a `zip` archive and unpack it somewhere. 
+Double click on exe file -> app should start automatically.
 
 **Class Diagramm anybody ? Sure here we go:**
 

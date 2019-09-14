@@ -4,12 +4,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MeetupToRTM;
 using NLog;
 using RememberTheMeetup.MeetUp;
 using RememberTheMilkApi.Helpers;
 using RememberTheMilkApi.Objects;
 
-namespace MeetupToRTM.RTM
+namespace RememberTheMeetup.RTM
 {
     class RTM
     {
@@ -167,7 +168,7 @@ namespace MeetupToRTM.RTM
         {
             timeline = GetRTMTimeline();
 
-            if (addAllTasks)
+            if (addAllTasks == true)
             {
                 try
                 {
@@ -193,6 +194,7 @@ namespace MeetupToRTM.RTM
 
             } else
             {
+                // see https://github.com/dmpe/MeetupToRTM/issues/2
                 // get all tasks where name begins with ID-MeetupRTM: 257831299 
                 // using GetMeetupTasks_FinalRTMStringList method .... and 
 
@@ -210,25 +212,8 @@ namespace MeetupToRTM.RTM
         /// <param name="timeline"></param>
         public void GetStoredRTMTasks(string list_id, string timeline)
         {
-            //result.list.taskseries.task.id
-            //string taskseries_id = lj.
-            //string taskseries_dk = created_task.TaskSeriesCollection.TaskSeriesList.ToString();
-            //System.Threading.Thread.Sleep(5000);
-            // + "taskseries_id" + taskseries_id + "\n" + taskseries_dk
-            //RtmApiResponse undoResponse = RtmMethodHelper.UndoTransaction(timeline, transactionId);
-
             RtmApiResponse listResponse = RtmMethodHelper.GetListsList();
             RtmApiResponse taskResponse = RtmMethodHelper.GetTasksList();
-
-
-            //RtmApiTaskSeriesList tsaks = taskResponse.TaskSeriesCollection.TaskSeriesList
-            //.Where(task => Equals(task.Id, "648052754")).FirstOrDefault();
-
-            //int terte = taskResponse.TaskSeriesCollection.TaskSeriesList.Count();
-            //RtmApiListObject tssListIds = listResponse.ListCollection.Lists
-            //    .Where(list => Equals(list.Id, listId))
-            //    .FirstOrDefault();
-
 
             //return all lists - 7 currently
             int tssListIds2 = listResponse.ListCollection.Lists.Count();
@@ -247,22 +232,13 @@ namespace MeetupToRTM.RTM
 
             logger.Info("target_rtm_meetup_list: -->" + target_rtm_meetup_list);
 
-            RtmApiResponse list_res = RtmMethodHelper.GetTasksList(target_rtm_meetup_list);
+            var list_res = RtmMethodHelper.GetTasksList(target_rtm_meetup_list);
             var coun = list_res.TaskSeriesCollection.TaskSeriesList.Select(x => x.TaskSeries.Count()).Sum();
-            //list_res.TaskSeriesCollection.TaskSeriesList.Select(x => x.TaskSeries).ToList().ForEach(s => Console.WriteLine(s.));
+            //var count = list_res.TaskSeriesCollection.TaskSeriesList.SelectMany(a => a.TaskSeries);
+            logger.Info("count of tasks in the list: -->" + coun + ".......... " + "--------------");
 
-            var count = list_res.TaskSeriesCollection.TaskSeriesList.SelectMany(a => a.TaskSeries);
-            logger.Info("count of tasks in the list: -->" + coun + ".......... " + "--------------"+ /*coun3 +*/"___________" + count);
+            var ssslist_id = taskResponse.TaskSeriesCollection.TaskSeriesList.FirstOrDefault();
 
-
-            //IList<RtmApiTaskSeries> tssTasks = taskResponse.TaskSeriesCollection.TaskSeriesList
-            //.Where(taskSeriesList => taskSeriesList.TaskSeries.Any() && tssListIds2.Contains(taskSeriesList.Id))
-            //.SelectMany(taskSeriesList => taskSeriesList.TaskSeries)
-            //.ToList();
-            RtmApiTaskSeriesList ssslist_id = taskResponse.TaskSeriesCollection.TaskSeriesList.FirstOrDefault();
-
-            // are same
-            //logger.Info(tssListIds.Id);
             logger.Info("list id and task/taskseries id: " + ssslist_id.Id);
             // TODO: List all tasks id, then check for their names and if we really need them again
 

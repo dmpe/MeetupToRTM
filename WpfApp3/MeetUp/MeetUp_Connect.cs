@@ -13,16 +13,14 @@ namespace RememberTheMeetup.MeetUp
     {
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
         readonly string authURL = "https://secure.meetup.com/oauth2/authorize";
-        string accessURL = "https://secure.meetup.com/oauth2/access";
-        string redirectURL = "https://dmpe.github.io/MeetupToRTM/";
+        readonly string accessURL = "https://secure.meetup.com/oauth2/access";
+        readonly string redirectURL = "https://dmpe.github.io/MeetupToRTM/";
         string authCompleteURL = string.Empty;
-        string accessTokenCompleteURL = string.Empty;
-        string error_message = string.Empty;
         public AuthKeys authKeys = null;
         public JsonMeetupAuth jma = null;
 
         /// <summary>
-        /// Basic constructor
+        /// Basic Meetup Connect constructor
         /// </summary>
         public MeetUp_Connect()
         {

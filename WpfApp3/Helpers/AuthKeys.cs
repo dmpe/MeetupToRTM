@@ -1,4 +1,4 @@
-﻿namespace MeetupToRTM
+﻿namespace RememberTheMeetup
 {
     /// <summary>
     /// Class used for storing authentication keys.

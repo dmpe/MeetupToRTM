@@ -16,7 +16,6 @@ namespace RememberTheMeetup.MeetUp
 {
     public class RtmMeetupTasks
     {
-
         public string MeetupID { get; set; }
         public string Long_Task_Description { get; set; }
         public string Short_Task_Description { get; set; }
@@ -45,7 +44,7 @@ namespace RememberTheMeetup.MeetUp
         public static readonly string status = "upcoming";
         public static readonly string scroll = "next_upcoming";
         public static readonly bool sign = true;
-        public string data_url = string.Empty;
+        public string meetupDataUrl = string.Empty;
         public AuthKeys keys = null;
         MeetUp_Connect mtc = null;
         JsonMeetupAuth jsmt = null;
@@ -112,7 +111,7 @@ namespace RememberTheMeetup.MeetUp
         {
             try
             {
-                data_url = "https://api.meetup.com"
+                meetupDataUrl = "https://api.meetup.com"
                     .AppendPathSegment("self")
                     .AppendPathSegment("events")
                     .SetQueryParams(new
@@ -126,7 +125,7 @@ namespace RememberTheMeetup.MeetUp
             {
                 logger.Error(e);
             }
-            return data_url;
+            return meetupDataUrl;
         }
 
         /// <summary>
@@ -166,10 +165,10 @@ namespace RememberTheMeetup.MeetUp
                     logger.Error(ex, "Could not deserialize JSON Object");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // any other exception
-                logger.Error(error_message);
+                logger.Error(error_message + e.Message);
             }
 
             return list_of_meetup_events;
@@ -271,6 +270,7 @@ namespace RememberTheMeetup.MeetUp
         {
             var new_name = Regex.Replace(name, "[—?@–#&!$%-=]", "", RegexOptions.Compiled);
             new_name = Regex.Replace(new_name, @"[\d-]", "", RegexOptions.Compiled);
+            new_name = new_name.Replace("\"", "");
             return new_name;
         }
 
