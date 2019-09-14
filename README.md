@@ -16,14 +16,16 @@ And therefore, avoid paying for such functionality through [IFTTT](https://www.r
  - Fetches your [meetup events](https://www.meetup.com/meetup_api/docs/self/events/) and convert them to tasks. 
    The format used, by default and which can be also adjusted, is <ID-MeetupRTM: _meetupEventID_ _MeetupName_>. 
  
- - 100% privacy - app has no tracking, just write a log to your PC.
+ - 100% Privacy-focused - my app has no tracking whatsoever. It only writes a [log file](https://github.com/nlog/nlog) to the folder from which program is executed.
 
  - [ ] Unfortunately, it will not recognize already added tasks and hence will add them again. 
- You will need to de-clutter your list for avoiding duplicates.
+ You will need to de-clutter your list for avoiding duplicates. See [Issue](https://github.com/dmpe/MeetupToRTM/issues/2)
+ 
+ - full CI/CD pipeline with Azure DevOps, resulting into [GitHub releases](https://github.com/dmpe/MeetupToRTM/releases)
 
 ### Requirenments to making it work:
 
-You will need to have 2 API keys:
+You will need to have 2 API keys:[
 
  - OAuth2 (since 2019) app from Meetup <https://secure.meetup.com/meetup_api/key/>
  - API Keys from RTM <https://www.rememberthemilk.com/services/api/>
