@@ -33,7 +33,7 @@ steps:
       cliProjectKey: 'dmpe_MeetupToRTM'
       cliProjectName: 'MeetupToRTM'
       cliProjectVersion: '1.3'
-      cliSources: '$(Build.SourcesDirectory)\WpfApp3\'
+      cliSources: $(Build.SourcesDirectory)\WpfApp3\
       extraProperties: 'sonar.cs.vstest.reportsPaths=..\TestResults\*.trx'
 
   - task: NuGetToolInstaller@1
@@ -125,16 +125,15 @@ steps:
   - task: GitHubRelease@0
     displayName: 'GitHub release draft'
     inputs:
+      gitHubConnection: 'dmpe'
+      repositoryName: 'dmpe/MeetupToRTM'
       action: 'create'
-      gitHubConnection: dmpe
-      tagSource: 'auto'
-      tagPattern: 'release'
-      repositoryName: dmpe/MeetupToRTM
-      title: "New Release: v.$(Build.BuildId)"
-      assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
-      target: $(Build.SourceVersion)
+      target: '$(Build.SourceVersion)'
+      tagSource: 'manual'
+      tag: '$(Build.BuildNumber)'
+      title: 'New Release: v.$(Build.BuildId)'
+      assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
       isPreRelease: true
-      isDraft: false
       compareWith: 'lastFullRelease'
     continueOnError: true
 
