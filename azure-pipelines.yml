@@ -24,7 +24,9 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: '$(_buildConfiguration)'
 
-steps:
+jobs:
+- job: A
+  steps:
 # - task: SonarCloudPrepare@1
 #   inputs:
 #     SonarCloud: 'SonarCloud'
@@ -38,110 +40,110 @@ steps:
 #   continueOnError: true
 #   condition: succeededOrFailed() 
 
-- task: NuGetToolInstaller@1
+  - task: NuGetToolInstaller@1
 
-- checkout: self
-  submodules: true
-  displayName: Download submodules
+  - checkout: self
+    submodules: true
+    displayName: Download submodules
 
-- task: NugetRestore@2
-  displayName: Restore nuget packages for RememberTheMilkApi.sln
-  inputs: 
-    command: restore
-    solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
-    feedsToUse: 'select'
+  - task: NugetRestore@2
+    displayName: Restore nuget packages for RememberTheMilkApi.sln
+    inputs: 
+      command: restore
+      solution: $(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln
+      feedsToUse: 'select'
 
-- task: VSBuild@1
-  displayName: Building RememberTheMilkApi solution, a submodule
-  inputs:
-    solution: '$(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln'
-    platform: $(buildPlatform)
-    configuration: $(buildConfiguration)
-    maximumCpuCount: true
-    msbuildArchitecture: 'x64'
+  - task: VSBuild@1
+    displayName: Building RememberTheMilkApi solution, a submodule
+    inputs:
+      solution: '$(Build.SourcesDirectory)\RememberTheMilkApi\RememberTheMilkApi.sln'
+      platform: $(buildPlatform)
+      configuration: $(buildConfiguration)
+      maximumCpuCount: true
+      msbuildArchitecture: 'x64'
 
-- task: CopyFiles@2
-  displayName: 'Copy Files to RTM lib of the $(Build.SourcesDirectory) where MeetupToRTM.csproj loads it'
-  inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\$(buildConfiguration)\'
-    Contents: 'RememberTheMilkApi.dll'
-    TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\'
-    CleanTargetFolder: false
-    OverWrite: true
-  condition: succeededOrFailed()
+  - task: CopyFiles@2
+    displayName: 'Copy Files to RTM lib of the $(Build.SourcesDirectory) where MeetupToRTM.csproj loads it'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\$(buildConfiguration)\'
+      Contents: 'RememberTheMilkApi.dll'
+      TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\'
+      CleanTargetFolder: false
+      OverWrite: true
+    condition: succeededOrFailed()
 
-#- script: |
-#    dir $(Build.ArtifactStagingDirectory) /s
-#    dir $(Build.SourcesDirectory) /s
+  #- script: |
+  #    dir $(Build.ArtifactStagingDirectory) /s
+  #    dir $(Build.SourcesDirectory) /s
 
-- task: NugetRestore@2
-  displayName: Restore nuget MeetupToRTM.csproj
-  inputs: 
-    command: restore
-    solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
-    feedsToUse: 'select'
+  - task: NugetRestore@2
+    displayName: Restore nuget MeetupToRTM.csproj
+    inputs: 
+      command: restore
+      solution: $(Build.SourcesDirectory)\MeetupToRTM.sln
+      feedsToUse: 'select'
 
-- task: VSBuild@1
-  displayName: Build MeetupToRTM.csproj, creating exe file
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+  - task: VSBuild@1
+    displayName: Build MeetupToRTM.csproj, creating exe file
+    inputs:
+      solution: '$(solution)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
 
-- task: VisualStudioTestPlatformInstaller@1
-  displayName: Prepare to build UnitTesting.csproj
-  inputs:
-    packageFeedSelector: 'nugetOrg'
-    versionSelector: 'latestPreRelease'
+  - task: VisualStudioTestPlatformInstaller@1
+    displayName: Prepare to build UnitTesting.csproj
+    inputs:
+      packageFeedSelector: 'nugetOrg'
+      versionSelector: 'latestPreRelease'
 
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\*test*.dll'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    codeCoverageEnabled: true
+  - task: VSTest@2
+    inputs:
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: '**\*test*.dll'
+      searchFolder: '$(System.DefaultWorkingDirectory)'
+      codeCoverageEnabled: true
 
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '**\UnitTesting.xml'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '**\UnitTesting.xml'
+      searchFolder: '$(System.DefaultWorkingDirectory)'
 
-#- task: VSTest@2
-#  inputs:
-#    platform: '$(buildPlatform)'
-#    configuration: '$(buildConfiguration)'
-#    codeCoverageEnabled: true
+  #- task: VSTest@2
+  #  inputs:
+  #    platform: '$(buildPlatform)'
+  #    configuration: '$(buildConfiguration)'
+  #    codeCoverageEnabled: true
 
-- task: ArchiveFiles@2
-  displayName: 'Upload final exe and related files from zip archive to GitHub'
-  inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)\WpfApp3\bin'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-    verbose: true
+  - task: ArchiveFiles@2
+    displayName: 'Upload final exe and related files from zip archive to GitHub'
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)\WpfApp3\bin'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+      verbose: true
 
-- task: GitHubRelease@0
-  displayName: 'GitHub release draft'
-  inputs:
-    action: 'create'
-    gitHubConnection: dmpe
-    tagSource: 'auto'
-    tagPattern: 'release'
-    repositoryName: dmpe/MeetupToRTM
-    title: "New Release: v.$(Build.BuildId)"
-    assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
-    target: $(Build.SourceVersion)
-    isPreRelease: true
-    isDraft: false
-    compareWith: 'lastFullRelease'
-  continueOnError: true
+  - task: GitHubRelease@0
+    displayName: 'GitHub release draft'
+    inputs:
+      action: 'create'
+      gitHubConnection: dmpe
+      tagSource: 'auto'
+      tagPattern: 'release'
+      repositoryName: dmpe/MeetupToRTM
+      title: "New Release: v.$(Build.BuildId)"
+      assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
+      target: $(Build.SourceVersion)
+      isPreRelease: true
+      isDraft: false
+      compareWith: 'lastFullRelease'
+    continueOnError: true
 
 
-jobs:
-- job: sonarqube
+- job: B
+  dependsOn: A
   variables:
     solution: '**/*.sln'
     buildPlatform: 'Any CPU'
