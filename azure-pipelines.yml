@@ -34,7 +34,7 @@ jobs:
       organization: 'dmpe-github'
       scannerMode: 'MSBuild'
       projectKey: 'dmpe_MeetupToRTM'
-      projectName: 'MeetupToRTM github'
+      projectName: 'MeetupToRTM'
       extraProperties: |
         sonar.organization=dmpe-github
         sonar.branch.name=master
