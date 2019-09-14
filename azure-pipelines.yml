@@ -22,24 +22,24 @@ jobs:
     buildPlatform: 'Any CPU'
     buildConfiguration: '$(_buildConfiguration)'
   steps:
-# - task: SonarCloudPrepare@1
-#   inputs:
-#     SonarCloud: 'SonarCloud'
-#     organization: 'dmpe-github'
-#     scannerMode: 'MSBuild'
-#     projectKey: 'dmpe_MeetupToRTM'
-#     projectName: 'MeetupToRTM github'
-#     extraProperties: |
-#      sonar.organization=dmpe-github
-#      sonar.branch.name=master
-#   continueOnError: true
-#   condition: succeededOrFailed() 
-
   - task: NuGetToolInstaller@1
 
   - checkout: self
     submodules: true
     displayName: Download submodules
+
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'SonarCloud'
+      organization: 'dmpe-github'
+      scannerMode: 'MSBuild'
+      projectKey: 'dmpe_MeetupToRTM'
+      projectName: 'MeetupToRTM github'
+      extraProperties: |
+        sonar.organization=dmpe-github
+        sonar.branch.name=master
+    continueOnError: true
+    condition: succeededOrFailed() 
 
   - task: NugetRestore@2
     displayName: Restore nuget packages for RememberTheMilkApi.sln
@@ -136,26 +136,5 @@ jobs:
       compareWith: 'lastFullRelease'
     continueOnError: true
 
-
-- job: B
-  pool:
-    vmImage: 'windows-2019'
-  dependsOn: A
-  variables:
-    solution: '**/*.sln'
-    buildPlatform: 'Any CPU'
-    buildConfiguration: 'release'
-  steps:
-  - task: SonarCloudPrepare@1
-    inputs:
-      SonarCloud: 'SonarCloud'
-      organization: 'dmpe-github'
-      scannerMode: 'MSBuild'
-      projectKey: 'dmpe_MeetupToRTM'
-      projectName: 'MeetupToRTM github'
-      extraProperties: |
-        sonar.organization=dmpe-github
-        sonar.branch.name=master
-    continueOnError: true
-    condition: succeededOrFailed() 
   - task: SonarCloudAnalyze@1
+
