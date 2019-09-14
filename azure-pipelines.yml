@@ -33,7 +33,7 @@ steps:
       cliProjectKey: 'dmpe_MeetupToRTM'
       cliProjectName: 'MeetupToRTM'
       cliProjectVersion: '1.3'
-      cliSources: '.'
+      cliSources: '$(Build.SourcesDirectory)\WpfApp3\'
       extraProperties: 'sonar.cs.vstest.reportsPaths=..\TestResults\*.trx'
 
   - task: NuGetToolInstaller@1
