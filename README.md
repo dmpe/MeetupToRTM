@@ -47,7 +47,7 @@ git submodule update --remote
 Download from release page a `zip` archive and unpack it somewhere. 
 Double click on exe file -> app should start automatically.
 
-**Class Diagramm anybody ? Sure here we go:**
+**Class Diagram anybody ? Sure here we go:**
 
 ![image3](images/ClassDiagram_MeetupToRTM.png)
 
