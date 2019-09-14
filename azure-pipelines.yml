@@ -11,8 +11,8 @@ jobs:
   strategy:
     maxParallel: 0
     matrix:
-      debug:
-        _buildConfiguration: 'debug'
+      # debug:
+      #   _buildConfiguration: 'debug'
       release:
         _buildConfiguration: 'release'
   pool:
