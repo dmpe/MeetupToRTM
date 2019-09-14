@@ -9,7 +9,7 @@
 # MeetupToRTM: C# .NetFramework 4.7 Desktop Application
 
 Use this app to export your upcoming Meetup.com events into Remember The Milk tasks.
-And therefore, avoid paying for such functionality through [IFTTT](https://www.rememberthemilk.com/services/ifttt/) :yay:.
+And therefore, avoid paying for such functionality through [IFTTT](https://www.rememberthemilk.com/services/ifttt/) :yay:
 
 ## Features/TODO:
 
