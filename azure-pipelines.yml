@@ -28,10 +28,12 @@ steps:
     inputs:
       SonarCloud: 'SonarCloud'
       organization: 'dmpe-github'
-      scannerMode: 'MSBuild'
-      projectKey: 'dmpe_MeetupToRTM'
-      projectName: 'MeetupToRTM'
-      projectVersion: '1.1'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'dmpe_MeetupToRTM'
+      cliProjectName: 'MeetupToRTM'
+      cliProjectVersion: '1.3'
+      cliSources: '.'
       extraProperties: 'sonar.cs.vstest.reportsPaths=..\TestResults\*.trx'
 
   - task: NuGetToolInstaller@1
