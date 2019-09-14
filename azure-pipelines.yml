@@ -25,6 +25,16 @@ pool:
 
 steps:
   - task: NuGetToolInstaller@1
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'SonarCloud'
+      organization: 'dmpe-github'
+      scannerMode: 'MSBuild'
+      projectKey: 'RememberYourMeeting'
+      projectName: 'RememberYourMeeting'
+      extraProperties: |
+        sonar.organization=dmpe-github
+        sonar.cs.vstest.reportsPaths=..\TestResults\*.trx
 
   - checkout: self
     submodules: true
@@ -96,16 +106,6 @@ steps:
       platform: '$(buildPlatform)'
       buildConfiguration: '$(buildConfiguration)'
 
-  - task: SonarCloudPrepare@1
-    inputs:
-      SonarCloud: 'SonarCloud'
-      organization: 'dmpe-github'
-      scannerMode: 'MSBuild'
-      projectKey: 'RememberYourMeeting'
-      projectName: 'RememberYourMeeting'
-      extraProperties: |
-        sonar.organization=dmpe-github
-        sonar.cs.vstest.reportsPaths=..\TestResults\*.trx
 
   - task: SonarCloudAnalyze@1
 
