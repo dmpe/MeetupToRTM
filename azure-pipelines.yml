@@ -29,9 +29,8 @@ steps:
     inputs:
       SonarCloud: 'SonarCloud'
       organization: 'dmpe-github'
-      scannerMode: 'MSBuild'
-      projectKey: 'dmpe_MeetupToRTM'
-      projectName: 'MeetupToRTM'
+      scannerMode: 'CLI'
+      configMode: 'file'
       extraProperties: |
         sonar.organization=dmpe-github
         sonar.cs.vstest.reportsPaths=..\TestResults\*.trx
