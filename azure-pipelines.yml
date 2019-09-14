@@ -6,16 +6,15 @@
 trigger:
 - master
 
-strategy:
-  maxParallel: 0
-  matrix:
-    debug:
-      _buildConfiguration: 'debug'
-    release:
-      _buildConfiguration: 'release'
-
 jobs:
 - job: A
+  strategy:
+    maxParallel: 0
+    matrix:
+      debug:
+        _buildConfiguration: 'debug'
+      release:
+        _buildConfiguration: 'release'
   pool:
     vmImage: 'windows-2019'
   variables:
