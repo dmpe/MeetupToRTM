@@ -34,6 +34,7 @@ jobs:
       scannerMode: 'MSBuild'
       projectKey: 'dmpe_MeetupToRTM'
       projectName: 'MeetupToRTM'
+      extraProperties: 'sonar.organization=dmpe-github'
     continueOnError: true
     condition: succeededOrFailed() 
 
