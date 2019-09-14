@@ -1,21 +1,17 @@
-﻿using MeetupToRTM.MeetupHelpers;
-using MeetupToRTM.RememberTM_Helpers;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using IniParser;
 using IniParser.Model;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
-
 using System.Diagnostics;
 using NLog;
 using System.IO;
 using System.Reflection;
 using RememberTheMeetup;
 using System;
-using MeetupToRTM.MeetupJSONHelpers;
-using System.Collections.Generic;
+using RememberTheMeetup.MeetUp;
 
 namespace MeetupToRTM
 {
@@ -29,7 +25,7 @@ namespace MeetupToRTM
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         AuthKeys ak = null;
-        RTM rtm = null;
+        RTM.RTM rtm = null;
         MeetUp meetup_inst = null;
         string[] key_ar;
 
@@ -111,7 +107,7 @@ namespace MeetupToRTM
             };
 
             meetup_inst = new MeetUp(ak, RTM_Web_UI_Format.Text);
-            rtm = new RTM();
+            rtm = new RTM.RTM();
 
             // initiate RTM connection
             SetLoggingMessage_Other(rtmCon);

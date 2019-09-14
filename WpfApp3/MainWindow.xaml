@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:MeetupToRTM"
         mc:Ignorable="d"
-        Title="Fetch Meetup data and create Remember The Milk tasks" WindowStartupLocation="CenterScreen" ScrollViewer.CanContentScroll="True" SizeToContent="WidthAndHeight" Width="1083" MinWidth="1079" Icon="images/iconfinder_milking-maid_1518579.ico" MinHeight="305" Height="441" ResizeMode="NoResize">
+        Title="Fetch Meetup data and create Remember The Milk tasks" WindowStartupLocation="CenterScreen" ScrollViewer.CanContentScroll="True" SizeToContent="WidthAndHeight" Width="1083" MinWidth="1079" Icon="static/iconfinder_milking-maid_1518579.ico" MinHeight="305" Height="441" ResizeMode="NoResize">
     <Grid Margin="0,0,477,0" Grid.IsSharedSizeScope="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="594*"/>

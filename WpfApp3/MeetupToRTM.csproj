@@ -87,7 +87,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>images\iconfinder_milking-maid_1518579.ico</ApplicationIcon>
+    <ApplicationIcon>static\iconfinder_milking-maid_1518579.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -152,7 +152,7 @@
       <HintPath>..\packages\NodaTime.2.4.6\lib\net45\NodaTime.dll</HintPath>
     </Reference>
     <Reference Include="RememberTheMilkApi">
-      <HintPath>RememberTheMilkApi.dll</HintPath>
+      <HintPath>..\..\RememberTheMilkApi-master\RememberTheMilkApi\bin\Debug\RememberTheMilkApi.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=106.6.10.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.6.10\lib\net452\RestSharp.dll</HintPath>
@@ -233,10 +233,10 @@
       <DependentUpon>Dialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AuthKeys.cs" />
-    <Compile Include="Meetup_Helpers\MeetUp.cs" />
-    <Compile Include="Meetup_Helpers\MeetUp_Connect.cs" />
-    <Compile Include="Meetup_Helpers\MeetUp_Classes.cs" />
-    <Compile Include="RememberTM_Helpers\RTM.cs" />
+    <Compile Include="MeetUp\MeetUp.cs" />
+    <Compile Include="MeetUp\MeetUp_Connect.cs" />
+    <Compile Include="MeetUp\MeetUp_Classes.cs" />
+    <Compile Include="RTM\RTM.cs" />
     <Page Include="Dialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -272,7 +272,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="images\iconfinder_milking-maid_1518579.ico" />
+    <Resource Include="static\iconfinder_milking-maid_1518579.ico" />
     <None Include="ClassDiagram_MeetupToRTM.cd" />
     <Resource Include="FodyWeavers.xml" />
     <Content Include="NLog.config">
