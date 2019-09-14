@@ -133,8 +133,7 @@ steps:
       tag: '$(Build.BuildNumber)'
       title: 'New Release: v.$(Build.BuildId)'
       assets: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-      isPreRelease: true
-      compareWith: 'lastReleaseByTag'
+      compareWith: 'lastRelease'
     continueOnError: true
 
 
