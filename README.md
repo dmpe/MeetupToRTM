@@ -16,16 +16,13 @@
  - Fetches your [meetup events](https://www.meetup.com/meetup_api/docs/self/events/) and converts them to tasks. 
    The format used, by default and which can be also adjusted, is <ID-MeetupRTM: _meetupEventID_ _MeetupName_>. 
  
- - [ ] In case of a frequent use, the app can recognize already added tasks (through abovementioned format) and will skip adding them again. 
-       Therefore de-cluttering your list and avoding duplicates. :yum:
-
- - [ ] For testing, use secret keys <https://stackoverflow.com/questions/50299066/how-to-pass-secrets-into-the-test-execution-context-from-vsts>
+ - [ ] Unfortunately, the app will not recognize already added and hence will add them again, thus forcing you to de-clutter your list for avoiding duplicates.
 
 #### Requirenments to making it work:
 
 You will need to have 2 API keys:
 
- - API Key from Meetup <https://secure.meetup.com/meetup_api/key/>
+ - OAuth2 (since 2019) app from Meetup <https://secure.meetup.com/meetup_api/key/>
  - API Keys from RTM <https://www.rememberthemilk.com/services/api/>
 
 ![image](images/rtm_meetup.png)
