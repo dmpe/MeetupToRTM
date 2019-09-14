@@ -24,16 +24,20 @@ pool:
 
 
 steps:
-  - task: NuGetToolInstaller@1
   - task: SonarCloudPrepare@1
     inputs:
       SonarCloud: 'SonarCloud'
       organization: 'dmpe-github'
       scannerMode: 'CLI'
-      configMode: 'file'
+      configMode: 'manual'
+      cliProjectKey: 'dmpe_MeetupToRTM'
+      cliProjectName: 'MeetupToRTM'
+      cliSources: '.'
       extraProperties: |
-        sonar.organization=dmpe-github
         sonar.cs.vstest.reportsPaths=..\TestResults\*.trx
+
+  - task: NuGetToolInstaller@1
+
   - checkout: self
     submodules: true
     displayName: Download submodules
