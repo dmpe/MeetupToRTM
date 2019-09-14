@@ -92,6 +92,9 @@ steps:
       testResultsFormat: 'VSTest'
       testResultsFiles: '**/*.trx'
       mergeTestResults: true
+      failTaskOnFailedTests: true
+      platform: '$(buildPlatform)'
+      buildConfiguration: '$(buildConfiguration)'
 
   #- task: VSTest@2
   #  inputs:
@@ -109,7 +112,7 @@ steps:
       cliSources: '.'
       extraProperties: |
         sonar.organization=dmpe-github
-        sonar.cs.vstest.reportsPaths=d:/a/1/s/TestResults/TestResults/TestResult.trx
+        sonar.cs.vstest.reportsPaths=d:\a\1\s\TestResults\*.trx
 
   - task: SonarQubeAnalyze@4
 
