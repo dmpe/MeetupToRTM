@@ -108,9 +108,10 @@ steps:
       platform: '$(buildPlatform)'
       buildConfiguration: '$(buildConfiguration)'
 
-
   - task: SonarCloudAnalyze@1
-
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: '300'
   - task: ArchiveFiles@2
     displayName: 'Upload final exe and related files from zip archive to GitHub'
     inputs:
