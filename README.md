@@ -5,7 +5,10 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=code_smells)](https://sonarcloud.io/dashboard?id=dmpe_MeetupToRTM)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=coverage)](https://sonarcloud.io/dashboard?id=dmpe_MeetupToRTM)
 ![GitHub](https://img.shields.io/github/license/dmpe/MeetupToRTM.svg)
- 
+[![Known Vulnerabilities](https://snyk.io//test/github/dmpe/MeetupToRTM/badge.svg?targetFile=UnitTesting/Tests.csproj)](https://snyk.io//test/github/dmpe/MeetupToRTM?targetFile=UnitTesting/Tests.csproj)
+[![Known Vulnerabilities](https://snyk.io//test/github/dmpe/MeetupToRTM/badge.svg?targetFile=WpfApp3/MeetupToRTM.csproj)](https://snyk.io//test/github/dmpe/MeetupToRTM?targetFile=WpfApp3/MeetupToRTM.csproj)
+
+  
 # MeetupToRTM: C# .NetFramework 4.7 Desktop Application
 
 Use this app to export your upcoming Meetup.com events into Remember The Milk tasks.
@@ -25,7 +28,7 @@ And therefore, avoid paying for such functionality through [IFTTT](https://www.r
 
 ### Requirenments to making it work:
 
-You will need to have 2 API keys:[
+You will need to have 2 API keys:
 
  - OAuth2 (since 2019) app from Meetup <https://secure.meetup.com/meetup_api/key/>
  - API Keys from RTM <https://www.rememberthemilk.com/services/api/>
