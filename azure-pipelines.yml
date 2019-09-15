@@ -34,6 +34,9 @@ steps:
       extraProperties: |
         'sonar.cs.vstest.reportsPaths=..\TestResults\*.trx'
         'sonar.branch.target=master'
+        'sonar.exclusions=**/obj/**,**/*.dll'
+        'sonar.branch.name=master'
+        'sonar.cs.xunit.reportsPaths=..\TestResults\*.trx'
 
   # - task: SonarCloudPrepare@1
   #   inputs:
