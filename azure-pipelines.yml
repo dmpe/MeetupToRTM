@@ -80,7 +80,7 @@ steps:
     inputs:
       SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\$(buildConfiguration)\'
       Contents: 'RememberTheMilkApi.dll'
-      TargetFolder: '$(Build.SourcesDirectory)\WpfApp3\'
+      TargetFolder: '$(Build.SourcesDirectory)\MeetupToRTM\'
       CleanTargetFolder: false
       OverWrite: true
     condition: succeededOrFailed()
