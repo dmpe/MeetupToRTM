@@ -39,7 +39,7 @@ namespace RememberTheMeetup.RTM
         /// RTM constructor which takes <c>AuthKeys</c> keys
         /// </summary>
         /// <see href="https://www.rememberthemilk.com/services/api/methods.rtm">RTM Methods API</see>
-        /// <param name="authKeys">Passing <c>AuthKeys</c> keys</param>
+        /// <param name="authKs">Passing <c>AuthKeys</c> keys</param>
         public RTM(AuthKeys authKs)
         {
             this.authKeys = authKs;
@@ -280,7 +280,7 @@ namespace RememberTheMeetup.RTM
         /// <summary>
         /// Log information about tasks
         /// </summary>
-        /// <param name="task_str"></param>
+        /// <param name="taskStatus"></param>
         private void LogTasks(string taskStatus)
         {
             logger.Info("...............");
