@@ -83,9 +83,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WpfApp3\MeetupToRTM.csproj">
+    <ProjectReference Include="..\MeetupToRTM\Core.csproj">
       <Project>{ceaa8992-0bd1-495e-997f-5829a001e561}</Project>
-      <Name>MeetupToRTM</Name>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

@@ -1,16 +1,15 @@
-﻿using System.Collections.ObjectModel;
-using IniParser;
-using IniParser.Model;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using System.Diagnostics;
+using IniParser;
 using NLog;
-using System.IO;
-using System.Reflection;
 using RememberTheMeetup;
-using System;
 using RememberTheMeetup.MeetUp;
 using RememberTheMeetup.RTM;
 
@@ -27,8 +26,8 @@ namespace MeetupToRTM
 
         AuthKeys ak = null;
         RTM rtm = null;
-        MeetUp meetup_inst = null;
-        string[] key_ar;
+        MeetUp meetup = null;
+        string[] iniConfigOfSecrets;
 
         private static ObservableCollection<string> ListBoxData;
         bool checkbox_value = false;
@@ -41,7 +40,7 @@ namespace MeetupToRTM
             ListBoxData = new ObservableCollection<string>() { "Used for logging..." };
 
             LoggingListBox.ItemsSource = ListBoxData;
-            key_ar = ReadConfig();
+            iniConfigOfSecrets = ReadConfig();
         }
 
         /// <summary>
@@ -51,39 +50,32 @@ namespace MeetupToRTM
         public string[] ReadConfig()
         {
             string[] key_array = null;
-            string MeetupKey;
-            string MeetupSecretKey;
-            string RTMkey;
-            string RTMsecret;
             try
             {
                 // This will get the current PROJECT directory
                 string currentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                 string projectDirectory = Path.Combine(currentDirectory + "\\RTM_Meetup_secrets.ini");
+                logger.Info("RTM_Meetup_secrets.ini is looked in: " + projectDirectory);
                 var parser = new FileIniDataParser();
+                string MeetupKey = null;
+                string MeetupSecretKey = null;
+                string RTMkey = null;
+                string RTMsecret = null;
                 if (File.Exists(projectDirectory))
                 {
-                    IniData data = parser.ReadFile(projectDirectory);
-                    KeyDataCollection keyCol = data["private_information"];
+                    var keyCol = parser.ReadFile(projectDirectory)["private_information"];
                     MeetupKey = keyCol["MeetupKey_file"];
                     MeetupSecretKey = keyCol["MeetupSecretKey_file"];
                     RTMkey = keyCol["RTMkey_file"];
                     RTMsecret = keyCol["RTMsecret_file"];
                 }
-                else
-                {
-                    MeetupSecretKey = string.Empty;
-                    MeetupKey = string.Empty;
-                    RTMkey = string.Empty;
-                    RTMsecret = string.Empty;
-                }
                 key_array = new string[] { MeetupKey, MeetupSecretKey, RTMkey, RTMsecret };
-                logger.Info("our keys: " + key_array[0] + " ..." + key_array[1] + " ..." + key_array[2] + " ..." + key_array[3]);
+                logger.Info("our secret keys: " + key_array[0] + " ..." + key_array[1] + " ..." + key_array[2] + " ..." + key_array[3]);
 
             }
             catch (FileNotFoundException ex)
             {
-                logger.Error(ex);
+                logger.Error(ex.Message);
             }
             return key_array;
         }
@@ -102,13 +94,13 @@ namespace MeetupToRTM
             string meetupCon = "MeetUp: Innitiate Connection...now...";
             ak = new AuthKeys
             {
-                MyRTMkey = key_ar[2] ?? RTMkey.Text,
-                MyRTMsecret = key_ar[3] ?? RTMsecret.Text,
-                MyMeetupKey = key_ar[0] ?? MeetupKey.Text,
-                MyMeetupKeySecret = key_ar[1] ?? MeetupSecretKey.Text
+                MyRTMkey = iniConfigOfSecrets[2] ?? RTMkey.Text,
+                MyRTMsecret = iniConfigOfSecrets[3] ?? RTMsecret.Text,
+                MyMeetupKey = iniConfigOfSecrets[0] ?? MeetupKey.Text,
+                MyMeetupKeySecret = iniConfigOfSecrets[1] ?? MeetupSecretKey.Text
             };
 
-            meetup_inst = new MeetUp(ak, RTM_Web_UI_Format.Text);
+            meetup = new MeetUp(ak, RTM_Web_UI_Format.Text);
             rtm = new RTM();
 
             // initiate RTM connection
@@ -117,26 +109,25 @@ namespace MeetupToRTM
             logger.Info("Done with RTM authKeys");
 
             // initiate Meetup connection
-            meetup_inst.InitiateConnection();
-            logger.Info(meetupCon);
             SetLoggingMessage_Other(meetupCon);
+            meetup.InitiateConnection();
+            logger.Info("Done with MeetUp 'code' key");
 
-            // open meetup dialog where you can insert code, code stored
+            // open meetup dialog where you can insert code
             // https://stackoverflow.com/questions/2796470/wpf-create-a-dialog-prompt
-            var myDia = new Dialog();
+            var myDia = new Dialog(ak);
             myDia.ShowDialog();
-            string meetupCode = myDia.return_MeetupKey;
-            Console.WriteLine("Meetup: so far correct! code: " + meetupCode);
-            var JsOb = meetup_inst.AuthorizeTokenAsync(meetupCode);
+            Console.WriteLine("Meetup: so far correct! token: " + ak.MyMeetupCode);
+            var JsOb = meetup.AuthorizeTokenAsync(ak.MyMeetupCode);
             logger.Info("Done with Meetup authKeys: " + JsOb.access_token);
             SetLoggingMessage_Other("Done with Meetup authKeys" + JsOb.access_token);
 
-            string meetupDataURL = meetup_inst.CreateDataURL();
-            var meetupEventData = meetup_inst.GetMeetupData(meetupDataURL);
+            string meetupDataURL = meetup.CreateDataURL();
+            var meetupEventData = meetup.GetMeetupData(meetupDataURL);
 
-            meetup_inst.GetSampleData(meetupEventData); // for testing
-            var rtmMeetupTasksData = meetup_inst.Create_RTM_Tasks_From_Events(meetupEventData);
-            var mu_event_venue = meetup_inst.PrepareMeetupTaskList_Venue_ToString(meetupEventData);
+            meetup.GetSampleData(meetupEventData);
+            var rtmMeetupTasksData = meetup.Create_RTM_Tasks_From_Events(meetupEventData);
+            var mu_event_venue = meetup.PrepareMeetupTaskList_Venue_ToString(meetupEventData);
             rtm.SetRTMTasks(meetupEventData, rtmMeetupTasksData, mu_event_venue, checkbox_value);
         }
 
@@ -147,7 +138,7 @@ namespace MeetupToRTM
         /// <param name="e"></param>
         public void exit(object sender, RoutedEventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         /// <summary>
@@ -171,7 +162,7 @@ namespace MeetupToRTM
         }
 
         /// <summary>
-        /// 
+        /// Add to the listbox
         /// </summary>
         /// <param name="checkBox">CheckBox value</param>
         private void Handle_Checkbox(CheckBox checkBox)

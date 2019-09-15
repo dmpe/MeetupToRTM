@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using NodaTime.Text;
-using NLog;
-using RestSharp;
-using Flurl;
-using Newtonsoft.Json;
-using Flurl.Http;
 using System.Diagnostics;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Windows;
+using Flurl;
+using Flurl.Http;
 using MeetupToRTM;
+using Newtonsoft.Json;
+using NLog;
+using NodaTime.Text;
+using RestSharp;
 
 namespace RememberTheMeetup.MeetUp
 {
@@ -135,7 +135,7 @@ namespace RememberTheMeetup.MeetUp
         /// <returns>Data (list of events) being associated with <c>MeetupJSONEvents</c> class</returns>
         public List<MeetupJSONEvents> GetMeetupData(string meetupDataURL)
         {
-            logger.Info("my token is :" + keys.MyMeetupToken + " - " + jsmt.access_token + " URL: " + meetupDataURL);
+            logger.Info("my token is :" + keys.MyMeetupToken + " URL: " + meetupDataURL);
             var client = new RestClient
             {
                 BaseUrl = new Uri(meetupDataURL)
@@ -186,17 +186,18 @@ namespace RememberTheMeetup.MeetUp
                 logger.Error(error_message);
                 MainWindow.SetLoggingMessage_Other(error_message);
 
-                MessageBox.Show("No upcomming events have been found in Meetup. Thus the application cannot transfer them to RTM.", "Information Message", MessageBoxButton.OK);
+                MessageBox.Show("No upcomming events have been found in Meetup. Thus the application " +
+                    "cannot transfer them to RTM.", "Information Message", MessageBoxButton.OK);
             }
         }
 
         /// <summary>
-        /// Returns a sample of data, i.e. URL links
+        /// Returns a sample of data, i.e. URL links in the Console and log
         /// </summary>
-        /// <param name="list_of_meetup_events_url_links">URL event links</param>
-        public void GetSampleData(List<MeetupJSONEvents> list_of_meetup_events_url_links)
+        /// <param name="listMeetupEventsURLlinks">URL event links</param>
+        public void GetSampleData(List<MeetupJSONEvents> listMeetupEventsURLlinks)
         {
-            foreach (var item in list_of_meetup_events_url_links)
+            foreach (var item in listMeetupEventsURLlinks)
             {
                 Console.WriteLine(item.Link);
                 logger.Info(item.Link);

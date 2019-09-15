@@ -1,6 +1,4 @@
-﻿using MeetupToRTM;
-using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace RememberTheMeetup
 {
@@ -9,35 +7,36 @@ namespace RememberTheMeetup
     /// </summary>
     public partial class Dialog : Window
     {
-        public string return_MeetupKey { get; set; }
+        public string returnMeetupCode { get; set; }
+        AuthKeys authKeys;
 
-        public Dialog()
+        public Dialog(AuthKeys ak)
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            this.authKeys = ak;
         }
 
-        public void btnSubmit_Click(object sender, RoutedEventArgs e) 
+        public void btnSubmit_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(MeetupCode.Text))
             {
-                string strUserName = MeetupCode.Text;
-                return_MeetupKey = strUserName;
-                this.Close();
+                authKeys.MyMeetupCode = MeetupCode.Text;
+                Close();
             }
             else
             {
-                MessageBox.Show("Must provide a user name in the textbox.");
+                MessageBox.Show("You must copy the code from the website into the textfield.");
             }
         }
 
         /// <summary>
-        /// Exit the application
+        /// Exit dialog
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            this.Close();
         }
     }
 }

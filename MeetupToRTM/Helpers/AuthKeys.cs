@@ -1,4 +1,7 @@
-﻿namespace RememberTheMeetup
+﻿/// <summary>
+/// Namespace and Authentication/Autorization Keys
+/// </summary>
+namespace RememberTheMeetup
 {
     /// <summary>
     /// Class used for storing authentication keys.
@@ -6,32 +9,32 @@
     public class AuthKeys
     {
         /// <summary>
-        /// Gets or Sets RTM key
+        /// Gets or sets RTM key
         /// </summary>
         public string MyRTMkey { get; set; }
 
         /// <summary>
-        /// Gets or Sets RTM secret
+        /// Gets or sets RTM secret
         /// </summary>
         public string MyRTMsecret { get; set; }
 
         /// <summary>
-        /// Gets or Sets Meetup key
+        /// Gets or sets Meetup key
         /// </summary>
         public string MyMeetupKey { get; set; }
 
         /// <summary>
-        /// Gets or Sets Meetup Secret
+        /// Gets or sets Meetup Secret
         /// </summary>
         public string MyMeetupKeySecret { get; set; }
 
         /// <summary>
-        /// Gets or Sets Meetup Auth Token
+        /// Gets or sets Meetup Auth Token
         /// </summary>
         public string MyMeetupToken { get; set; }
 
         /// <summary>
-        /// Gets or Sets Meetup "code" (OAuth2)
+        /// Gets or sets Meetup "code" (OAuth2)
         /// </summary>
         public string MyMeetupCode { get; set; }
 
@@ -66,7 +69,7 @@
         /// <param name="myMeetupKeySecret"></param>
         /// <param name="myMeetupToken"></param>
         /// <param name="myMeetupCode"></param>
-        public AuthKeys(string myRTMkey, string myRTMsecret, string myMeetupKey, string myMeetupKeySecret, 
+        public AuthKeys(string myRTMkey, string myRTMsecret, string myMeetupKey, string myMeetupKeySecret,
                         string myMeetupToken, string myMeetupCode)
         {
             MyRTMkey = myRTMkey;

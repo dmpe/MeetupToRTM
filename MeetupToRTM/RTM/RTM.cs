@@ -4,18 +4,20 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using MeetupToRTM.MeetupHelpers;
-using MeetupToRTM.MeetupJSONHelpers;
+using MeetupToRTM;
 using NLog;
+using RememberTheMeetup.MeetUp;
 using RememberTheMilkApi.Helpers;
 using RememberTheMilkApi.Objects;
 
-namespace MeetupToRTM.RememberTM_Helpers
+namespace RememberTheMeetup.RTM
 {
-    class RTM
+    /// <summary>
+    /// RTM class for setting RTM tasks and for auth
+    /// </summary>
+    internal class RTM
     {
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
-        public AuthKeys authKeys = null;
 
         private List<MeetupJSONEvents> meetupEventData = null;
         private List<string> meetupVenueData = null;
@@ -24,7 +26,7 @@ namespace MeetupToRTM.RememberTM_Helpers
         private string timeline = string.Empty;
         private string listId = string.Empty;
         private string target_rtm_meetup_list = string.Empty;
-
+        public AuthKeys authKeys = null;
 
         /// <summary>
         /// Empty constructor generating a random number (string)
@@ -49,7 +51,13 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// <param name="authKeys">Passing <c>AuthKeys</c> keys</param>
         public void InitiateConnection(AuthKeys authKeys)
         {
-            RtmConnectionHelper.InitializeRtmConnection(authKeys.MyRTMkey, authKeys.MyRTMsecret);
+            if (!string.IsNullOrEmpty(authKeys.MyRTMkey) || !string.IsNullOrEmpty(authKeys.MyRTMsecret))
+            {
+                RtmConnectionHelper.InitializeRtmConnection(authKeys.MyRTMkey, authKeys.MyRTMsecret);
+            } else
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
             MainWindow.SetLoggingMessage_Other("RTM: Initiate Connection using: " + authKeys.MyRTMkey + " and " + authKeys.MyRTMsecret);
 
             string rtmUriWithWritePerms = RtmConnectionHelper.GetAuthenticationUrl(RtmConnectionHelper.Permissions.Write);
@@ -61,7 +69,7 @@ namespace MeetupToRTM.RememberTM_Helpers
             RtmApiResponse authResponseToken = RtmConnectionHelper.GetApiAuthToken();
 
             logger.Info("RTM: authResponseToken: -> " + authResponseToken.Auth.Token);
-            MainWindow.SetLoggingMessage_Other("RTM: " + authResponseToken.Auth.User.FullName + 
+            MainWindow.SetLoggingMessage_Other("RTM: " + authResponseToken.Auth.User.FullName +
                 " token: -> " + authResponseToken.Auth.Token);
 
             if (!File.Exists("authtoken.authtoken"))
@@ -110,15 +118,23 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// <param name="token">Token from RTM</param>
         public void CreateAuthFile(string name, string token)
         {
-            using (var fs = new FileStream(name, FileMode.Create, FileAccess.ReadWrite))
+            FileStream fs = null;
+            try
             {
-                using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                using (fs = new FileStream(name, FileMode.Create, FileAccess.ReadWrite))
                 {
-                    sw.Write(token);
-                    sw.Close();
-                    fs.Close();
+                    using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                    {
+                        sw.Write(token);
+                        sw.Close();
+                    }
                 }
             }
+            finally
+            {
+                fs?.Close();
+            }
+
             RtmConnectionHelper.SetApiAuthToken(token);
         }
 
@@ -130,8 +146,10 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// <param name="mu_venue_strings"></param>
         /// <param name="checkbox"></param>
         /// </summary>
-        public void SetRTMTasks(List<MeetupJSONEvents> mu_data, List<RtmMeetupTasks> mu_data_strings,
-                                List<string> mu_venue_strings, bool checkbox)
+        public void SetRTMTasks(List<MeetupJSONEvents> mu_data,
+                                List<RtmMeetupTasks> mu_data_strings,
+                                List<string> mu_venue_strings,
+                                bool checkbox)
         {
             string msg = "RTM: we are creating a new set of tasks";
             MainWindow.SetLoggingMessage_Other(msg);
@@ -149,12 +167,12 @@ namespace MeetupToRTM.RememberTM_Helpers
             if (checkbox)
             {
                 // add all even if they already exist
-                AddTasks(true);
+                this.AddTasks(true);
             }
             else
             {
                 // only add those which do not exist
-                AddTasks(false);
+                this.AddTasks(false);
             }
         }
 
@@ -166,9 +184,9 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// <param name="addAllTasks">by default it should be true</param>
         private void AddTasks(bool addAllTasks)
         {
-            timeline = GetRTMTimeline();
+            timeline = this.GetRTMTimeline();
 
-            if (addAllTasks)
+            if (addAllTasks == true)
             {
                 try
                 {
@@ -184,16 +202,16 @@ namespace MeetupToRTM.RememberTM_Helpers
                         MainWindow.SetLoggingMessage_Other(strr);
                     }
                     GetStoredRTMTasks(listId, timeline);
-
                 }
                 catch (Exception e)
                 {
                     Console.Write("RTM: some error in AddTasks " + e.Message);
                     logger.Error(e.Message);
                 }
-
-            } else
+            }
+            else
             {
+                // see https://github.com/dmpe/MeetupToRTM/issues/2
                 // get all tasks where name begins with ID-MeetupRTM: 257831299 
                 // using GetMeetupTasks_FinalRTMStringList method .... and 
 
@@ -211,27 +229,15 @@ namespace MeetupToRTM.RememberTM_Helpers
         /// <param name="timeline"></param>
         public void GetStoredRTMTasks(string list_id, string timeline)
         {
-            //result.list.taskseries.task.id
-            //string taskseries_id = lj.
-            //string taskseries_dk = created_task.TaskSeriesCollection.TaskSeriesList.ToString();
-            //System.Threading.Thread.Sleep(5000);
-            // + "taskseries_id" + taskseries_id + "\n" + taskseries_dk
-            //RtmApiResponse undoResponse = RtmMethodHelper.UndoTransaction(timeline, transactionId);
+            if (list_id is null || timeline is null)
+            {
+                throw new ArgumentNullException(nameof(list_id));
+            }
 
             RtmApiResponse listResponse = RtmMethodHelper.GetListsList();
             RtmApiResponse taskResponse = RtmMethodHelper.GetTasksList();
 
-
-            //RtmApiTaskSeriesList tsaks = taskResponse.TaskSeriesCollection.TaskSeriesList
-            //.Where(task => Equals(task.Id, "648052754")).FirstOrDefault();
-
-            //int terte = taskResponse.TaskSeriesCollection.TaskSeriesList.Count();
-            //RtmApiListObject tssListIds = listResponse.ListCollection.Lists
-            //    .Where(list => Equals(list.Id, listId))
-            //    .FirstOrDefault();
-
-
-            //return all lists - 7 currently
+            // return all lists 
             int tssListIds2 = listResponse.ListCollection.Lists.Count();
             logger.Info("number of RTM lists: " + tssListIds2);
 
@@ -248,25 +254,17 @@ namespace MeetupToRTM.RememberTM_Helpers
 
             logger.Info("target_rtm_meetup_list: -->" + target_rtm_meetup_list);
 
-            RtmApiResponse list_res = RtmMethodHelper.GetTasksList(target_rtm_meetup_list);
+            var list_res = RtmMethodHelper.GetTasksList(target_rtm_meetup_list);
             var coun = list_res.TaskSeriesCollection.TaskSeriesList.Select(x => x.TaskSeries.Count()).Sum();
-            //list_res.TaskSeriesCollection.TaskSeriesList.Select(x => x.TaskSeries).ToList().ForEach(s => Console.WriteLine(s.));
 
-            var count = list_res.TaskSeriesCollection.TaskSeriesList.SelectMany(a => a.TaskSeries);
-            logger.Info("count of tasks in the list: -->" + coun + ".......... " + "--------------"+ /*coun3 +*/"___________" + count);
+            // var count = list_res.TaskSeriesCollection.TaskSeriesList.SelectMany(a => a.TaskSeries);
+            logger.Info("count of tasks in the list: -->" + coun + ".......... " + "--------------");
 
+            var ssslist_id = taskResponse.TaskSeriesCollection.TaskSeriesList.FirstOrDefault();
 
-            //IList<RtmApiTaskSeries> tssTasks = taskResponse.TaskSeriesCollection.TaskSeriesList
-            //.Where(taskSeriesList => taskSeriesList.TaskSeries.Any() && tssListIds2.Contains(taskSeriesList.Id))
-            //.SelectMany(taskSeriesList => taskSeriesList.TaskSeries)
-            //.ToList();
-            RtmApiTaskSeriesList ssslist_id = taskResponse.TaskSeriesCollection.TaskSeriesList.FirstOrDefault();
-
-            // are same
-            //logger.Info(tssListIds.Id);
             logger.Info("list id and task/taskseries id: " + ssslist_id.Id);
-            // TODO: List all tasks id, then check for their names and if we really need them again
 
+            // TODO: List all tasks id, then check for their names and if we really need them again
         }
 
         /// <summary>

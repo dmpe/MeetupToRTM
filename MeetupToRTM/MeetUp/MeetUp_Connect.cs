@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
-using MeetupToRTM.MeetupJSONHelpers;
 using Newtonsoft.Json;
 using NLog;
 using RestSharp;
 
-namespace MeetupToRTM.Meetup_Helpers
+namespace RememberTheMeetup.MeetUp
 {
     class MeetUp_Connect
     {
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
-        readonly string authURL = "https://secure.meetup.com/oauth2/authorize";
-        string accessURL = "https://secure.meetup.com/oauth2/access";
-        string redirectURL = "https://dmpe.github.io/MeetupToRTM/";
+        private readonly string authURL = "https://secure.meetup.com/oauth2/authorize";
+        private readonly string accessURL = "https://secure.meetup.com/oauth2/access";
+        private readonly string redirectURL = "https://dmpe.github.io/MeetupToRTM/";
         string authCompleteURL = string.Empty;
-        string accessTokenCompleteURL = string.Empty;
-        string error_message = string.Empty;
         public AuthKeys authKeys = null;
         public JsonMeetupAuth jma = null;
 
         /// <summary>
-        /// Basic constructor
+        /// Basic Meetup Connect constructor
         /// </summary>
         public MeetUp_Connect()
         {
@@ -48,11 +44,12 @@ namespace MeetupToRTM.Meetup_Helpers
             {
                 logger.Error(e);
             }
+
             return authCompleteURL;
         }
 
         /// <summary>
-        /// Having the autherization "code", use it in the URL which returns one-time access token.
+        /// Having the authorization "code", use it in the URL which returns one-time access token.
         /// Use body from RequestAccessToken method and request JSON response
         /// </summary>
         /// <returns>JSON response which is mapped to the <c>JsonMeetupAuth</c> class</returns>
@@ -74,7 +71,7 @@ namespace MeetupToRTM.Meetup_Helpers
             request.AddParameter("code", authCode);
 
             logger.Info(client.BuildUri(request));
-            IRestResponse response = client.Execute(request);
+            var response = client.Execute(request);
             try
             {
                 var content = response.Content;
@@ -86,17 +83,8 @@ namespace MeetupToRTM.Meetup_Helpers
                 // any other exception
                 logger.Error(ex.Message);
             }
+
             return jma;
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
