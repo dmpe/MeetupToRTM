@@ -28,16 +28,14 @@ steps:
     inputs:
       SonarCloud: 'SonarCloud'
       organization: 'dmpe-github'
-      scannerMode: 'MSBuild'
-      projectKey: 'dmpe_MeetupToRTM'
-      projectName: 'MeetupToRTM'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliSources: '.'
       extraProperties: |
         'sonar.cs.vstest.reportsPaths=..\TestResults\*.trx'
         'sonar.branch.target=master'
         'sonar.exclusions=**/obj/**,**/*.dll'
-        'sonar.branch.name=master'
         'sonar.cs.xunit.reportsPaths=..\TestResults\*.trx'
-
   # - task: SonarCloudPrepare@1
   #   inputs:
   #     SonarCloud: 'SonarCloud'
