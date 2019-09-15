@@ -30,6 +30,8 @@ steps:
       organization: 'dmpe-github'
       scannerMode: 'CLI'
       configMode: 'manual'
+      cliProjectKey: 'dmpe_MeetupToRTM'
+      cliProjectName: 'MeetupToRTM'
       cliSources: '.'
       extraProperties: |
         'sonar.cs.vstest.reportsPaths=..\TestResults\*.trx'
