@@ -132,7 +132,7 @@ steps:
   - task: ArchiveFiles@2
     displayName: 'Upload final exe and related files from zip archive to GitHub'
     inputs:
-      rootFolderOrFile: '$(Build.SourcesDirectory)\WpfApp3\bin'
+      rootFolderOrFile: '$(Build.SourcesDirectory)\MeetupToRTM\bin\Debug'
       includeRootFolder: true
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
