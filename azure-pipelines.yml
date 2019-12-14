@@ -76,11 +76,21 @@ steps:
       msbuildArchitecture: 'x64'
 
   - task: CopyFiles@2
-    displayName: 'Copy Files to RTM lib of the $(Build.SourcesDirectory) where MeetupToRTM.csproj loads it'
+    displayName: 'Copy RememberTheMilkApi DDL to $(Build.SourcesDirectory) where MeetupToRTM.csproj loads it'
     inputs:
       SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\$(buildConfiguration)\'
       Contents: 'RememberTheMilkApi.dll'
       TargetFolder: '$(Build.SourcesDirectory)\MeetupToRTM\'
+      CleanTargetFolder: false
+      OverWrite: true
+    condition: succeededOrFailed()
+
+  - task: CopyFiles@2
+    displayName: 'Copy RememberTheMilkApi DDL to $(Build.SourcesDirectory) where MeetupToRTM.csproj loads it'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)\RememberTheMilkApi\RememberTheMilkApi\bin\$(buildConfiguration)\'
+      Contents: 'RememberTheMilkApi.dll'
+      TargetFolder: '$(Build.SourcesDirectory)\Tests'
       CleanTargetFolder: false
       OverWrite: true
     condition: succeededOrFailed()
