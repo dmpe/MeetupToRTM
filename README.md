@@ -5,8 +5,8 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=code_smells)](https://sonarcloud.io/dashboard?id=dmpe_MeetupToRTM)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=dmpe_MeetupToRTM&metric=coverage)](https://sonarcloud.io/dashboard?id=dmpe_MeetupToRTM)
 ![GitHub](https://img.shields.io/github/license/dmpe/MeetupToRTM.svg)
-[![Known Vulnerabilities](https://snyk.io//test/github/dmpe/MeetupToRTM/badge.svg?targetFile=UnitTesting/Tests.csproj)](https://snyk.io//test/github/dmpe/MeetupToRTM?targetFile=UnitTesting/Tests.csproj)
-[![Known Vulnerabilities](https://snyk.io//test/github/dmpe/MeetupToRTM/badge.svg?targetFile=WpfApp3/MeetupToRTM.csproj)](https://snyk.io//test/github/dmpe/MeetupToRTM?targetFile=WpfApp3/MeetupToRTM.csproj)
+[![Known Vulnerabilities](https://snyk.io/test/github/dmpe/MeetupToRTM/badge.svg?targetFile=MeetupToRTM/Core.csproj)](https://snyk.io/test/github/dmpe/MeetupToRTM?targetFile=MeetupToRTM/Core.csproj)
+[![Known Vulnerabilities](https://snyk.io/test/github/dmpe/MeetupToRTM/badge.svg?targetFile=Tests/Tests.csproj)](https://snyk.io/test/github/dmpe/MeetupToRTM?targetFile=Tests/Tests.csproj)
 
   
 # MeetupToRTM: C# .NetFramework 4.7 Desktop Application
