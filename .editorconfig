@@ -2,9 +2,11 @@
 ############################### 
 # Core EditorConfig Options   # 
 ############################### 
+root = true
 # All files 
 [*] 
 indent_style = space 
+end_of_line = crlf
 # Code files 
 [*.{cs,csx,vb,vbx}] 
 indent_size = 4 
