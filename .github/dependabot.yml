@@ -1,0 +1,27 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: AvalonEdit
+    versions:
+    - ">= 6.0.a, < 6.1"
+  - dependency-name: NLog
+    versions:
+    - 4.7.9
+  - dependency-name: AvalonEdit
+    versions:
+    - 6.1.0
+  - dependency-name: MSTest.TestFramework
+    versions:
+    - 2.2.1
+- package-ecosystem: gitsubmodule
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "10:00"
+  open-pull-requests-limit: 10
