@@ -149,8 +149,9 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.7.1\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NodaTime, Version=2.4.8.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NodaTime.2.4.8\lib\net45\NodaTime.dll</HintPath>
+    <Reference Include="NodaTime, Version=3.1.11.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1">
+      <HintPath>..\packages/NodaTime.3.1.11/lib/netstandard2.0/NodaTime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="RememberTheMilkApi">
       <HintPath>RememberTheMilkApi.dll</HintPath>
