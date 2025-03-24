@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="../packages/Costura.Fody.6.0.0/build/Costura.Fody.props" Condition="Exists('../packages/Costura.Fody.6.0.0/build/Costura.Fody.props')" />
   <Import Project="..\packages\Microsoft.NET.Test.Sdk.16.6.1\build\net40\Microsoft.NET.Test.Sdk.props" Condition="Exists('..\packages\Microsoft.NET.Test.Sdk.16.6.1\build\net40\Microsoft.NET.Test.Sdk.props')" />
   <Import Project="..\packages\Microsoft.CodeCoverage.16.6.1\build\netstandard1.0\Microsoft.CodeCoverage.props" Condition="Exists('..\packages\Microsoft.CodeCoverage.16.6.1\build\netstandard1.0\Microsoft.CodeCoverage.props')" />
   <Import Project="..\packages\Costura.Fody.4.1.0\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.4.1.0\build\Costura.Fody.props')" />
@@ -114,8 +115,9 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
-    <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
+    <Reference Include="Costura, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d">
+      <HintPath>..\packages\Costura.Fody.6.0.0\lib\netstandard2.0\Costura.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Flurl, Version=2.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.2.8.2\lib\net40\Flurl.dll</HintPath>
@@ -130,7 +132,7 @@
       <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignColors, Version=3.0.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a">
-      <HintPath>..\packages/MaterialDesignColors.3.0.0/lib/net462/MaterialDesignColors.dll</HintPath>
+      <HintPath>..\packages\MaterialDesignColors.3.0.0\lib\net462\MaterialDesignColors.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=3.1.2.1465, Culture=neutral, processorArchitecture=MSIL">
@@ -148,11 +150,11 @@
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
-      <HintPath>..\packages/NLog.5.3.2/lib/net46/NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.5.3.2\lib\net46\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NodaTime, Version=3.1.11.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1">
-      <HintPath>..\packages/NodaTime.3.1.11/lib/netstandard2.0/NodaTime.dll</HintPath>
+      <HintPath>..\packages\NodaTime.3.1.11\lib\netstandard2.0\NodaTime.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RememberTheMilkApi">
@@ -176,7 +178,7 @@
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages/System.Diagnostics.DiagnosticSource.8.0.1/lib/net462/System.Diagnostics.DiagnosticSource.dll</HintPath>
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.8.0.1\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -335,6 +337,9 @@
     <Error Condition="!Exists('..\packages\Microsoft.NET.Test.Sdk.16.6.1\build\net40\Microsoft.NET.Test.Sdk.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NET.Test.Sdk.16.6.1\build\net40\Microsoft.NET.Test.Sdk.targets'))" />
     <Error Condition="!Exists('..\packages\MaterialDesignThemes.3.1.2\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.3.1.2\build\MaterialDesignThemes.targets'))" />
     <Error Condition="!Exists('../packages/Fody.6.8.1/build/Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Fody.6.8.1/build/Fody.targets'))" />
+    <Error Condition="!Exists('../packages/Fody.6.9.1/build/Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Fody.6.9.1/build/Fody.targets'))" />
+    <Error Condition="!Exists('../packages/Costura.Fody.6.0.0/build/Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Costura.Fody.6.0.0/build/Costura.Fody.props'))" />
+    <Error Condition="!Exists('../packages/Costura.Fody.6.0.0/build/Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Costura.Fody.6.0.0/build/Costura.Fody.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets')" />
   <PropertyGroup>
@@ -346,4 +351,6 @@
   <Import Project="..\packages\Microsoft.NET.Test.Sdk.16.6.1\build\net40\Microsoft.NET.Test.Sdk.targets" Condition="Exists('..\packages\Microsoft.NET.Test.Sdk.16.6.1\build\net40\Microsoft.NET.Test.Sdk.targets')" />
   <Import Project="..\packages\MaterialDesignThemes.3.1.2\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.1.2\build\MaterialDesignThemes.targets')" />
   <Import Project="../packages/Fody.6.8.1/build/Fody.targets" Condition="Exists('../packages/Fody.6.8.1/build/Fody.targets')" />
+  <Import Project="../packages/Fody.6.9.1/build/Fody.targets" Condition="Exists('../packages/Fody.6.9.1/build/Fody.targets')" />
+  <Import Project="../packages/Costura.Fody.6.0.0/build/Costura.Fody.targets" Condition="Exists('../packages/Costura.Fody.6.0.0/build/Costura.Fody.targets')" />
 </Project>
